@@ -1,8 +1,29 @@
 
+"use client";
+
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Twitter, Instagram, Linkedin, Globe, Mail, Phone, MapPin } from "lucide-react";
+import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { collection, query } from "firebase/firestore";
 
 export function Footer() {
+  const db = useFirestore();
+  const contentQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, "websiteContentBlocks"));
+  }, [db]);
+
+  const { data: blocks } = useCollection(contentQuery);
+
+  const getVal = (key: string, def: string) => blocks?.find(b => b.id === key)?.value || def;
+
+  const fb = getVal("social_facebook_url", "#");
+  const tw = getVal("social_twitter_url", "#");
+  const ig = getVal("social_instagram_url", "#");
+  const li = getVal("social_linkedin_url", "#");
+  const paymentImg = getVal("payment_methods_image_url", "");
+
   return (
     <footer id="contact" className="bg-foreground text-white pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
@@ -20,16 +41,16 @@ export function Footer() {
               Premium web hosting provider in Bangladesh. Empowering thousands of small and large businesses to succeed online.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
+              <a href={fb} target="_blank" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
+              <a href={tw} target="_blank" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
+              <a href={ig} target="_blank" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
+              <a href={li} target="_blank" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors">
                 <Linkedin className="w-5 h-5" />
               </a>
             </div>
@@ -50,8 +71,8 @@ export function Footer() {
             <ul className="space-y-4 text-white/60">
               <li><Link href="https://host.amarshebahost.com/knowledgebase.php" className="hover:text-white transition-colors">Knowledge Base</Link></li>
               <li><Link href="https://host.amarshebahost.com/submitticket.php" className="hover:text-white transition-colors">Submit a Ticket</Link></li>
-              <li><Link href="/support" className="hover:text-white transition-colors">Contact Us</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/refund-policy" className="hover:text-white transition-colors">Refund Policy</Link></li>
             </ul>
           </div>
 
@@ -74,13 +95,28 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Payment Methods Section */}
+        {paymentImg && (
+          <div className="border-t border-white/10 pt-10 pb-6">
+            <h5 className="text-xl font-bold mb-6 tracking-wide">WE ACCEPTED</h5>
+            <div className="relative w-full max-w-4xl h-24 md:h-32">
+              <Image 
+                src={paymentImg} 
+                alt="Accepted Payment Methods" 
+                fill 
+                className="object-contain object-left"
+              />
+            </div>
+          </div>
+        )}
+
         <div className="border-t border-white/10 pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-white/40 text-sm">
             © {new Date().getFullYear()} AmarShebaHost. All rights reserved.
           </p>
           <div className="flex gap-8 text-sm text-white/40">
-            <Link href="#" className="hover:text-white">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white">Refund Policy</Link>
+            <Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
+            <Link href="/refund-policy" className="hover:text-white">Refund Policy</Link>
           </div>
         </div>
       </div>
