@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { Facebook, Twitter, Instagram, Linkedin, Globe, Mail, Phone } from "lucide-react";
+import { Facebook, Twitter, Instagram, Linkedin, Globe, Mail, Phone, MapPin } from "lucide-react";
 
 export function Footer() {
   return (
@@ -64,11 +64,11 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary" />
-                <span>+880 1234-567890</span>
+                <span>+880 1977-679962</span>
               </li>
               <li className="flex items-start gap-3">
-                <Globe className="w-5 h-5 text-primary mt-1" />
-                <span>123 Technology Park, Dhaka-1212, Bangladesh</span>
+                <MapPin className="w-5 h-5 text-primary mt-1" />
+                <span>92 Shahid Faruk Road, near Tony Power, South Jatrabari, Dhaka-1204, Bangladesh</span>
               </li>
             </ul>
           </div>

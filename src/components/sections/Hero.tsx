@@ -44,15 +44,21 @@ export function Hero() {
         <div className="relative animate-fade-in delay-300">
           <div className="absolute -inset-4 gradient-blue opacity-10 blur-2xl rounded-3xl" />
           <div className="relative glass-card rounded-3xl p-4 transform hover:scale-[1.02] transition-transform duration-500">
-            <Image
-              src={heroImage?.imageUrl || ""}
-              alt={heroImage?.description || "Hosting Servers"}
-              width={600}
-              height={400}
-              className="rounded-2xl shadow-lg object-cover"
-              data-ai-hint="server datacenter"
-              priority
-            />
+            {heroImage?.imageUrl ? (
+              <Image
+                src={heroImage.imageUrl}
+                alt={heroImage.description || "Hosting Servers"}
+                width={600}
+                height={400}
+                className="rounded-2xl shadow-lg object-cover"
+                data-ai-hint="server datacenter"
+                priority
+              />
+            ) : (
+              <div className="w-[600px] h-[400px] bg-muted rounded-2xl flex items-center justify-center">
+                <Server className="w-12 h-12 text-muted-foreground" />
+              </div>
+            )}
             {/* Floating Card */}
             <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-2xl animate-bounce-slow">
               <div className="flex items-center gap-4">

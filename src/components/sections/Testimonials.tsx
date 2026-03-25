@@ -1,5 +1,5 @@
 
-import { Star } from "lucide-react";
+import { Star, User } from "lucide-react";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
@@ -48,13 +48,19 @@ export function Testimonials() {
                 <p className="text-lg italic text-foreground mb-8">"{review.content}"</p>
               </div>
               <div className="flex items-center gap-4 border-t pt-6">
-                <Image 
-                  src={review.image?.imageUrl || ""} 
-                  alt={review.name}
-                  width={48}
-                  height={48}
-                  className="rounded-full shadow-inner"
-                />
+                {review.image?.imageUrl ? (
+                  <Image 
+                    src={review.image.imageUrl} 
+                    alt={review.name}
+                    width={48}
+                    height={48}
+                    className="rounded-full shadow-inner"
+                  />
+                ) : (
+                  <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
+                    <User className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                )}
                 <div>
                   <div className="font-bold text-base">{review.name}</div>
                   <div className="text-sm text-muted-foreground">{review.role}</div>

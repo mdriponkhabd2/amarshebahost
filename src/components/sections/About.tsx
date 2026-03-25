@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
+import { Headphones } from "lucide-react";
 
 export function About() {
   const aboutImage = PlaceHolderImages.find(img => img.id === "about-support");
@@ -11,14 +12,20 @@ export function About() {
       <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div className="relative">
           <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full" />
-          <Image
-            src={aboutImage?.imageUrl || ""}
-            alt={aboutImage?.description || "About Us"}
-            width={600}
-            height={500}
-            className="relative rounded-[2rem] shadow-2xl object-cover"
-            data-ai-hint="customer support"
-          />
+          {aboutImage?.imageUrl ? (
+            <Image
+              src={aboutImage.imageUrl}
+              alt={aboutImage.description || "About Us"}
+              width={600}
+              height={500}
+              className="relative rounded-[2rem] shadow-2xl object-cover"
+              data-ai-hint="customer support"
+            />
+          ) : (
+            <div className="relative w-full h-[500px] bg-muted rounded-[2rem] flex items-center justify-center">
+              <Headphones className="w-16 h-16 text-muted-foreground" />
+            </div>
+          )}
         </div>
         
         <div>
