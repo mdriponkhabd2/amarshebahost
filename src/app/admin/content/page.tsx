@@ -97,12 +97,12 @@ export default function AdminContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label>Logo URL</Label>
-              <Input value={formData["website_logo_url"]} onChange={(e) => handleUpdate("website_logo_url", e.target.value)} className="rounded-xl" />
+              <Input value={formData["website_logo_url"]} onChange={(e) => handleUpdate("website_logo_url", e.target.value)} className="rounded-xl" placeholder="https://your-logo-link.png" />
               <Button onClick={() => saveBlock("website_logo_url", "Logo URL")} size="sm" className="gradient-blue rounded-lg">Save Logo</Button>
             </div>
             <div className="space-y-2">
               <Label>Payment Methods Image URL</Label>
-              <Input value={formData["payment_methods_image_url"]} onChange={(e) => handleUpdate("payment_methods_image_url", e.target.value)} className="rounded-xl" />
+              <Input value={formData["payment_methods_image_url"]} onChange={(e) => handleUpdate("payment_methods_image_url", e.target.value)} className="rounded-xl" placeholder="https://link-to-payment-icons.png" />
               <Button onClick={() => saveBlock("payment_methods_image_url", "Payment methods image")} size="sm" className="gradient-blue rounded-lg">Save Payment Icons</Button>
             </div>
           </div>
@@ -127,6 +127,7 @@ export default function AdminContent() {
                 value={formData[`social_${social}_url`]} 
                 onChange={(e) => handleUpdate(`social_${social}_url`, e.target.value)} 
                 className="rounded-xl"
+                placeholder={`https://${social}.com/yourprofile`}
               />
               <Button onClick={() => saveBlock(`social_${social}_url`, `${social} social link`)} size="sm" variant="outline" className="rounded-lg">Save {social}</Button>
             </div>

@@ -22,7 +22,7 @@ export function Footer() {
   const tw = getVal("social_twitter_url", "#");
   const ig = getVal("social_instagram_url", "#");
   const li = getVal("social_linkedin_url", "#");
-  const paymentImg = getVal("payment_methods_image_url", "");
+  const paymentImg = getVal("payment_methods_image_url", "https://images.unsplash.com/photo-1556742049-0ad745665771?q=80&w=1000&auto=format&fit=crop");
 
   return (
     <footer id="contact" className="bg-foreground text-white pt-20 pb-10">
@@ -98,7 +98,7 @@ export function Footer() {
         {/* Payment Methods Section */}
         {paymentImg && (
           <div className="border-t border-white/10 pt-10 pb-6">
-            <h5 className="text-xl font-bold mb-6 tracking-wide">WE ACCEPTED</h5>
+            <h5 className="text-xl font-bold mb-6 tracking-wide uppercase opacity-70">We Accepted</h5>
             <div className="relative w-full max-w-4xl h-24 md:h-32">
               <Image 
                 src={paymentImg} 
@@ -115,8 +115,8 @@ export function Footer() {
             © {new Date().getFullYear()} AmarShebaHost. All rights reserved.
           </p>
           <div className="flex gap-8 text-sm text-white/40">
-            <Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
-            <Link href="/refund-policy" className="hover:text-white">Refund Policy</Link>
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/refund-policy" className="hover:text-white transition-colors">Refund Policy</Link>
           </div>
         </div>
       </div>
