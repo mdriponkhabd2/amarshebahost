@@ -2,8 +2,10 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Link2, LayoutDashboard, Database, Globe } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default function AdminDashboard() {
   const stats = [
@@ -50,8 +52,4 @@ export default function AdminDashboard() {
       </div>
     </div>
   );
-}
-
-function cn(...inputs: any[]) {
-  return inputs.filter(Boolean).join(" ");
 }
