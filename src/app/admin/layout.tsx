@@ -46,8 +46,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     );
   }
 
-  // Effect will handle the redirect if unauthorized
-  if (!isAuthorized) {
+  // If unauthorized and logic above is processing redirect, return nothing
+  if (!isAuthorized && pathname !== "/admin/login") {
     return null;
   }
 
@@ -59,7 +59,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar Navigation */}
-      <aside className="w-72 bg-white border-r flex flex-col shadow-sm">
+      <aside className="w-72 bg-white border-r flex flex-col shadow-sm sticky top-0 h-screen">
         <div className="p-8 border-b">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 gradient-blue rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">
@@ -67,12 +67,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-lg leading-none">Admin Area</span>
-              <span className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Management Console</span>
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Management</span>
             </div>
           </Link>
         </div>
         
-        <nav className="flex-1 p-6 space-y-2">
+        <nav className="flex-1 p-6 space-y-2 overflow-y-auto">
           <Link 
             href="/admin" 
             className={`flex items-center gap-3 px-5 py-4 rounded-2xl transition-all ${
