@@ -62,7 +62,7 @@ export function Pricing() {
       </div>
 
       <div className="mb-10 flex items-baseline gap-1">
-        <span className="text-5xl font-extrabold text-foreground">{plan.currency}{plan.price}</span>
+        <span className="text-5xl font-extrabold text-foreground">{plan.currency || "৳"}{plan.price}</span>
         <span className="text-muted-foreground">/mo</span>
       </div>
 

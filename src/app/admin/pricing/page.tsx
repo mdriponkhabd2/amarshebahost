@@ -19,7 +19,7 @@ const DEMO_PLANS = [
   { category: "hosting", name: "Standard", description: "Ideal for growing businesses", price: 499, features: ["10GB Storage", "Unlimited Bandwidth", "5 Websites", "Free Domain"], isPopular: true, callToActionUrl: "#", displayOrder: 2 },
   { category: "hosting", name: "Premium", description: "Ultimate power for professionals", price: 999, features: ["Unlimited Storage", "Global CDN", "20 Websites", "Priority Support"], isPopular: false, callToActionUrl: "#", displayOrder: 3 },
   // VPS
-  { category: "vps", name: "VPS Start", description: "entry-level virtual server", price: 999, features: ["2 vCPU Cores", "4GB RAM", "50GB NVMe SSD", "1TB Bandwidth"], isPopular: false, callToActionUrl: "#", displayOrder: 4 },
+  { category: "vps", name: "VPS Start", description: "Entry-level virtual server", price: 999, features: ["2 vCPU Cores", "4GB RAM", "50GB NVMe SSD", "1TB Bandwidth"], isPopular: false, callToActionUrl: "#", displayOrder: 4 },
   { category: "vps", name: "VPS Pro", description: "High performance VPS", price: 1999, features: ["4 vCPU Cores", "8GB RAM", "100GB NVMe SSD", "Unlimited Bandwidth"], isPopular: true, callToActionUrl: "#", displayOrder: 5 },
   { category: "vps", name: "VPS Elite", description: "Enterprise grade VPS", price: 3999, features: ["8 vCPU Cores", "16GB RAM", "200GB NVMe SSD", "Dedicated IP"], isPopular: false, callToActionUrl: "#", displayOrder: 6 },
   // Reseller
@@ -67,7 +67,7 @@ export default function AdminPricing() {
     setNewPopular(false);
   };
 
-  const initializeDemoPlans = () => {
+  const initializeAllDemoPlans = () => {
     if (!db) return;
     const colRef = collection(db, "pricingPlans");
     DEMO_PLANS.forEach((plan) => {
@@ -94,11 +94,9 @@ export default function AdminPricing() {
           <h1 className="text-3xl font-bold mb-2 text-gradient">Pricing Plan Manager</h1>
           <p className="text-muted-foreground">Manage your web hosting, VPS, and reseller packages.</p>
         </div>
-        {plans?.length === 0 && (
-          <Button onClick={initializeDemoPlans} variant="outline" className="rounded-xl gap-2">
-            <Sparkles className="w-4 h-4 text-primary" /> Load All Demo Packages
-          </Button>
-        )}
+        <Button onClick={initializeAllDemoPlans} variant="outline" className="rounded-xl gap-2 border-primary text-primary hover:bg-primary/10">
+          <Sparkles className="w-4 h-4" /> Load All Demo Packages (Hosting, VPS, Reseller)
+        </Button>
       </div>
 
       <Card className="rounded-[2rem] shadow-sm border-border/50 bg-white">
@@ -243,7 +241,7 @@ export default function AdminPricing() {
           </div>
           {plans?.filter(p => p.category === cat).length === 0 && (
              <div className="p-12 border-2 border-dashed rounded-[2rem] text-center bg-muted/20 text-muted-foreground">
-               No {cat} plans added yet.
+               No {cat} plans added yet. Click "Load All Demo Packages" to start.
              </div>
           )}
         </div>
