@@ -2,19 +2,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useFirestore, useCollection, useMemoFirebase, setDocumentNonBlocking } from "@/firebase";
+import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { collection, query, doc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Save, Image as ImageIcon, Type, FileText } from "lucide-react";
+import { Save, Image as ImageIcon, Type, FileText, Link2 } from "lucide-react";
 
 const DEFAULT_CONTENT: Record<string, string> = {
   "hero_headline": "Fast, Secure &\nReliable Hosting",
   "hero_subheadline": "Empower your online presence with ultra-fast servers, 99.9% uptime, and premium support. Start your journey with AmarShebaHost today.",
   "hero_image_url": "https://picsum.photos/seed/hosting1/1200/800",
+  "hero_signin_url": "#",
+  "hero_signup_url": "#",
   "about_headline": "Reliable Web Hosting\nBorn in Bangladesh",
   "about_desc_1": "AmarShebaHost was founded with a single mission: to provide high-quality, world-class hosting solutions at affordable prices for the Bangladeshi market.",
   "about_desc_2": "With our servers located in strategic global data centers and a local support team ready to assist you in Bengali and English.",
@@ -69,7 +72,7 @@ export default function AdminContent() {
     <div className="p-8 max-w-5xl mx-auto space-y-8">
       <div>
         <h1 className="text-3xl font-bold mb-2 text-gradient">Website Content Manager</h1>
-        <p className="text-muted-foreground">Edit the main text and images. Demo text is shown as default.</p>
+        <p className="text-muted-foreground">Edit the main text, images, and button links.</p>
       </div>
 
       {/* Hero Section Management */}
@@ -81,7 +84,7 @@ export default function AdminContent() {
             </div>
             <div>
               <CardTitle>Hero Section</CardTitle>
-              <CardDescription>Manage the main introduction area of your site.</CardDescription>
+              <CardDescription>Manage text, image, and login/register links.</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -96,7 +99,7 @@ export default function AdminContent() {
                 className="rounded-xl h-12"
               />
               <Button onClick={() => saveBlock("hero_headline", "Hero main headline")} size="sm" className="gradient-blue gap-2 rounded-lg">
-                <Save className="w-4 h-4" /> Save Changes
+                <Save className="w-4 h-4" /> Save
               </Button>
             </div>
             <div className="space-y-2">
@@ -113,10 +116,38 @@ export default function AdminContent() {
                 </div>
               </div>
               <Button onClick={() => saveBlock("hero_image_url", "Hero section image")} size="sm" className="gradient-blue gap-2 rounded-lg">
-                <Save className="w-4 h-4" /> Save Image URL
+                <Save className="w-4 h-4" /> Save
               </Button>
             </div>
           </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-muted/20 rounded-2xl border border-dashed">
+             <div className="space-y-2">
+              <Label className="flex items-center gap-2"><Link2 className="w-4 h-4" /> Sign In URL</Label>
+              <Input 
+                value={formData["hero_signin_url"]} 
+                onChange={(e) => handleUpdate("hero_signin_url", e.target.value)}
+                placeholder="https://host.amarshebahost.com/clientarea.php"
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("hero_signin_url", "Hero Sign In Link")} size="sm" variant="outline" className="gap-2 rounded-lg">
+                <Save className="w-4 h-4" /> Save Sign In URL
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2"><Link2 className="w-4 h-4" /> Sign Up URL</Label>
+              <Input 
+                value={formData["hero_signup_url"]} 
+                onChange={(e) => handleUpdate("hero_signup_url", e.target.value)}
+                placeholder="https://host.amarshebahost.com/register.php"
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("hero_signup_url", "Hero Sign Up Link")} size="sm" variant="outline" className="gap-2 rounded-lg">
+                <Save className="w-4 h-4" /> Save Sign Up URL
+              </Button>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label>Sub-headline Description</Label>
             <Textarea 

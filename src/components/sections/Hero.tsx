@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { ChevronRight, Server, Shield, Zap } from "lucide-react";
+import { Server, Shield, Zap } from "lucide-react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { collection, query } from "firebase/firestore";
 
@@ -26,6 +26,14 @@ export function Hero() {
   const headline = getBlockValue("hero_headline", "Fast, Secure &\nReliable Hosting");
   const subheadline = getBlockValue("hero_subheadline", "Empower your online presence with ultra-fast servers, 99.9% uptime, and premium support. Start your journey with AmarShebaHost today.");
   const imageUrl = getBlockValue("hero_image_url", heroPlaceholder?.imageUrl || "");
+  const signInUrl = getBlockValue("hero_signin_url", "#");
+  const signUpUrl = getBlockValue("hero_signup_url", "#");
+
+  const handleRedirect = (url: string) => {
+    if (url && url !== "#") {
+      window.location.href = url;
+    }
+  };
 
   return (
     <section id="home" className="relative pt-32 pb-20 overflow-hidden">
@@ -46,11 +54,20 @@ export function Hero() {
             {subheadline}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button size="lg" className="gradient-blue text-lg px-8 shadow-xl hover:scale-105 transition-transform">
-              Get Started <ChevronRight className="ml-2 w-5 h-5" />
+            <Button 
+              size="lg" 
+              className="gradient-blue text-lg px-10 shadow-xl hover:scale-105 transition-transform rounded-2xl h-14"
+              onClick={() => handleRedirect(signInUrl)}
+            >
+              Sign In
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 hover:bg-accent/50 transition-colors">
-              View Plans
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="text-lg px-10 hover:bg-accent/50 transition-colors border-2 rounded-2xl h-14"
+              onClick={() => handleRedirect(signUpUrl)}
+            >
+              Sign Up
             </Button>
           </div>
           
