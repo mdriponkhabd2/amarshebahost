@@ -152,10 +152,7 @@ export function Navbar() {
           <NavDropdown label="Reseller" items={resellerItems} />
           <NavDropdown label="Domain" items={domainItems} />
 
-          <Link href="#about" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-            About
-          </Link>
-          <Link href="#contact" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+          <Link href="/support" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
             Support
           </Link>
           <div className="flex items-center gap-3 ml-4">
@@ -215,10 +212,7 @@ export function Navbar() {
               ))}
             </Accordion>
 
-            <Link href="#about" className="text-lg font-semibold py-2" onClick={() => setIsMobileMenuOpen(false)}>
-              About
-            </Link>
-            <Link href="#contact" className="text-lg font-semibold py-2" onClick={() => setIsMobileMenuOpen(false)}>
+            <Link href="/support" className="text-lg font-semibold py-2" onClick={() => setIsMobileMenuOpen(false)}>
               Support
             </Link>
             <div className="flex flex-col gap-3 mt-6">

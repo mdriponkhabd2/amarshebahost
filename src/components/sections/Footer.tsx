@@ -38,19 +38,19 @@ export function Footer() {
           <div>
             <h4 className="text-lg font-bold mb-6">Quick Links</h4>
             <ul className="space-y-4 text-white/60">
-              <li><Link href="#home" className="hover:text-white transition-colors">Home</Link></li>
-              <li><Link href="#features" className="hover:text-white transition-colors">Features</Link></li>
-              <li><Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link></li>
-              <li><Link href="#about" className="hover:text-white transition-colors">About Us</Link></li>
+              <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
+              <li><Link href="/#features" className="hover:text-white transition-colors">Features</Link></li>
+              <li><Link href="/#pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link href="/support" className="hover:text-white transition-colors">Support</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-lg font-bold mb-6">Support</h4>
             <ul className="space-y-4 text-white/60">
-              <li><Link href="#" className="hover:text-white transition-colors">Knowledge Base</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Submit a Ticket</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Contact Us</Link></li>
+              <li><Link href="https://host.amarshebahost.com/knowledgebase.php" className="hover:text-white transition-colors">Knowledge Base</Link></li>
+              <li><Link href="https://host.amarshebahost.com/submitticket.php" className="hover:text-white transition-colors">Submit a Ticket</Link></li>
+              <li><Link href="/support" className="hover:text-white transition-colors">Contact Us</Link></li>
               <li><Link href="#" className="hover:text-white transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
