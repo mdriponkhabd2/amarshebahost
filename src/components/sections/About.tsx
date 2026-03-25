@@ -23,7 +23,7 @@ export function About() {
     return blocks?.find(b => b.id === key)?.value || defaultValue;
   };
 
-  const headline = getBlockValue("about_headline", "Reliable Web Hosting Born in Bangladesh");
+  const headline = getBlockValue("about_headline", "Reliable Web Hosting\nBorn in Bangladesh");
   const desc1 = getBlockValue("about_desc_1", "AmarShebaHost was founded with a single mission: to provide high-quality, world-class hosting solutions at affordable prices for the Bangladeshi market. We understand the local ecosystem better than anyone else.");
   const desc2 = getBlockValue("about_desc_2", "With our servers located in strategic global data centers and a local support team ready to assist you in Bengali and English, we ensure your online journey is smooth, secure, and successful.");
   const imageUrl = getBlockValue("about_image_url", aboutPlaceholder?.imageUrl || "");
@@ -50,7 +50,7 @@ export function About() {
         </div>
         
         <div>
-          <h2 className="text-4xl font-bold mb-8 leading-tight">
+          <h2 className="text-4xl font-bold mb-8 leading-tight whitespace-pre-line">
             {headline}
           </h2>
           <p className="text-lg text-muted-foreground mb-6 leading-relaxed">

@@ -23,7 +23,7 @@ export function Hero() {
     return blocks?.find(b => b.id === key)?.value || defaultValue;
   };
 
-  const headline = getBlockValue("hero_headline", "Fast, Secure & Reliable Hosting");
+  const headline = getBlockValue("hero_headline", "Fast, Secure &\nReliable Hosting");
   const subheadline = getBlockValue("hero_subheadline", "Empower your online presence with ultra-fast servers, 99.9% uptime, and premium support. Start your journey with AmarShebaHost today.");
   const imageUrl = getBlockValue("hero_image_url", heroPlaceholder?.imageUrl || "");
 
