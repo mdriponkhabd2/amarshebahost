@@ -70,11 +70,16 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "PricingPlan",
       "type": "object",
-      "description": "Defines a web hosting pricing plan offered by AmarShebaHost, including its name, cost, and included features.",
+      "description": "Defines a web hosting, VPS, or Reseller pricing plan offered by AmarShebaHost.",
       "properties": {
         "id": {
           "type": "string",
           "description": "Unique identifier for the PricingPlan entity."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the plan (e.g., 'hosting', 'vps', 'reseller').",
+          "enum": ["hosting", "vps", "reseller"]
         },
         "name": {
           "type": "string",
@@ -90,7 +95,7 @@
         },
         "currency": {
           "type": "string",
-          "description": "The currency of the price (e.g., 'BDT' for Bangladeshi Taka, 'USD' for United States Dollar)."
+          "description": "The currency of the price (e.g., '৳')."
         },
         "features": {
           "type": "array",
@@ -115,6 +120,7 @@
       },
       "required": [
         "id",
+        "category",
         "name",
         "description",
         "price",
@@ -179,7 +185,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "NavigationLink",
       "type": "object",
-      "description": "Represents a menu item or link within the website's navigation, allowing for configurable links and hierarchical structures via an admin panel.",
+      "description": "Represents a menu item or link within the website's navigation.",
       "properties": {
         "id": {
           "type": "string",
@@ -187,7 +193,7 @@
         },
         "title": {
           "type": "string",
-          "description": "The display text for the navigation link (e.g., 'Home', 'Pricing', 'Domain Registration')."
+          "description": "The display text for the navigation link."
         },
         "url": {
           "type": "string",
@@ -196,15 +202,11 @@
         },
         "location": {
           "type": "string",
-          "description": "Specifies where the link is displayed on the website (e.g., 'header_main', 'footer', 'domain_submenu')."
+          "description": "Specifies where the link is displayed on the website (e.g., 'hosting', 'reseller', 'domain')."
         },
         "displayOrder": {
           "type": "number",
-          "description": "The numerical order of the link within its specific location or among its sibling menu items."
-        },
-        "parentId": {
-          "type": "string",
-          "description": "Reference to another NavigationLink if this is a sub-item in a hierarchical menu. Null for top-level menu items. (Relationship: NavigationLink 1:N NavigationLink)"
+          "description": "The numerical order of the link."
         }
       },
       "required": [
@@ -219,7 +221,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "WebsiteContentBlock",
       "type": "object",
-      "description": "A generic entity for storing configurable text content or blocks used throughout the website, such as headlines, descriptions, or footer text, manageable via an admin panel.",
+      "description": "A generic entity for storing configurable text content or blocks used throughout the website.",
       "properties": {
         "id": {
           "type": "string",
@@ -227,19 +229,19 @@
         },
         "key": {
           "type": "string",
-          "description": "A unique programmatic key to identify this content block (e.g., 'hero_headline', 'about_us_description', 'footer_copyright_text')."
+          "description": "A unique programmatic key."
         },
         "value": {
           "type": "string",
-          "description": "The actual content of the block, which can be plain text, HTML, or markdown."
+          "description": "The actual content."
         },
         "contentType": {
           "type": "string",
-          "description": "Specifies the type of content stored (e.g., 'plaintext', 'html', 'markdown') to aid in rendering and selecting the appropriate editor in an admin panel."
+          "description": "Specifies the type of content (e.g., 'plaintext', 'html', 'markdown')."
         },
         "description": {
           "type": "string",
-          "description": "A descriptive explanation of the purpose or typical location of this content block on the website."
+          "description": "A descriptive explanation."
         }
       },
       "required": [
@@ -266,13 +268,7 @@
           "schema": {
             "$ref": "#/backend/entities/User"
           },
-          "description": "Collection to store administrative roles.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique ID of the user who is an administrator."
-            }
-          ]
+          "description": "Collection to store administrative roles."
         }
       },
       {
@@ -282,13 +278,7 @@
           "schema": {
             "$ref": "#/backend/entities/DomainPrice"
           },
-          "description": "Stores pricing for various domain extensions.",
-          "params": [
-            {
-              "name": "priceId",
-              "description": "The unique identifier for a domain price."
-            }
-          ]
+          "description": "Stores pricing for various domain extensions."
         }
       },
       {
@@ -298,13 +288,7 @@
           "schema": {
             "$ref": "#/backend/entities/Feature"
           },
-          "description": "Stores key features of the web hosting service.",
-          "params": [
-            {
-              "name": "featureId",
-              "description": "The unique identifier for a specific feature."
-            }
-          ]
+          "description": "Stores key features of the web hosting service."
         }
       },
       {
@@ -314,13 +298,7 @@
           "schema": {
             "$ref": "#/backend/entities/PricingPlan"
           },
-          "description": "Contains details for various web hosting pricing plans.",
-          "params": [
-            {
-              "name": "planId",
-              "description": "The unique identifier for a specific pricing plan."
-            }
-          ]
+          "description": "Contains details for various hosting, VPS, and reseller plans."
         }
       },
       {
@@ -330,13 +308,7 @@
           "schema": {
             "$ref": "#/backend/entities/Testimonial"
           },
-          "description": "Stores customer testimonials.",
-          "params": [
-            {
-              "name": "testimonialId",
-              "description": "The unique identifier for a specific customer testimonial."
-            }
-          ]
+          "description": "Stores customer testimonials."
         }
       },
       {
@@ -346,13 +318,7 @@
           "schema": {
             "$ref": "#/backend/entities/NavigationLink"
           },
-          "description": "Manages all navigation menu items and links across the website.",
-          "params": [
-            {
-              "name": "linkId",
-              "description": "The unique identifier for a specific navigation link."
-            }
-          ]
+          "description": "Manages all navigation menu items."
         }
       },
       {
@@ -362,13 +328,7 @@
           "schema": {
             "$ref": "#/backend/entities/WebsiteContentBlock"
           },
-          "description": "A generic collection for storing various configurable text or HTML content blocks.",
-          "params": [
-            {
-              "name": "blockId",
-              "description": "The unique identifier for a specific content block."
-            }
-          ]
+          "description": "A generic collection for storing various configurable text blocks."
         }
       }
     ]
