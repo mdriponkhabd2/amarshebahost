@@ -11,13 +11,23 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Save, Image as ImageIcon, Type, FileText } from "lucide-react";
 
+const DEFAULT_CONTENT: Record<string, string> = {
+  "hero_headline": "Fast, Secure &\nReliable Hosting",
+  "hero_subheadline": "Empower your online presence with ultra-fast servers, 99.9% uptime, and premium support. Start your journey with AmarShebaHost today.",
+  "hero_image_url": "https://picsum.photos/seed/hosting1/1200/800",
+  "about_headline": "Reliable Web Hosting\nBorn in Bangladesh",
+  "about_desc_1": "AmarShebaHost was founded with a single mission: to provide high-quality, world-class hosting solutions at affordable prices for the Bangladeshi market.",
+  "about_desc_2": "With our servers located in strategic global data centers and a local support team ready to assist you in Bengali and English.",
+  "about_image_url": "https://picsum.photos/seed/hosting2/800/600"
+};
+
 /**
  * AdminContent Component
  * Manages the text and image URLs for Hero and About sections.
  */
 export default function AdminContent() {
   const db = useFirestore();
-  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState<Record<string, string>>(DEFAULT_CONTENT);
 
   const contentQuery = useMemoFirebase(() => {
     if (!db) return null;
@@ -26,10 +36,10 @@ export default function AdminContent() {
 
   const { data: blocks, isLoading } = useCollection(contentQuery);
 
-  // Sync Firestore data to local state once loaded
+  // Sync Firestore data to local state, keeping defaults for missing keys
   useEffect(() => {
     if (blocks) {
-      const data: Record<string, string> = {};
+      const data: Record<string, string> = { ...DEFAULT_CONTENT };
       blocks.forEach((block) => {
         data[block.id] = block.value;
       });
@@ -59,7 +69,7 @@ export default function AdminContent() {
     <div className="p-8 max-w-5xl mx-auto space-y-8">
       <div>
         <h1 className="text-3xl font-bold mb-2 text-gradient">Website Content Manager</h1>
-        <p className="text-muted-foreground">Update the main text and image URLs for your landing page sections.</p>
+        <p className="text-muted-foreground">Edit the main text and images. Demo text is shown as default.</p>
       </div>
 
       {/* Hero Section Management */}
@@ -80,20 +90,20 @@ export default function AdminContent() {
             <div className="space-y-2">
               <Label>Main Headline</Label>
               <Input 
-                value={formData["hero_headline"] || ""} 
+                value={formData["hero_headline"]} 
                 onChange={(e) => handleUpdate("hero_headline", e.target.value)}
                 placeholder="e.g. Fast, Secure & Reliable Hosting"
                 className="rounded-xl h-12"
               />
               <Button onClick={() => saveBlock("hero_headline", "Hero main headline")} size="sm" className="gradient-blue gap-2 rounded-lg">
-                <Save className="w-4 h-4" /> Save
+                <Save className="w-4 h-4" /> Save Changes
               </Button>
             </div>
             <div className="space-y-2">
               <Label>Hero Image URL</Label>
               <div className="flex gap-2">
                 <Input 
-                  value={formData["hero_image_url"] || ""} 
+                  value={formData["hero_image_url"]} 
                   onChange={(e) => handleUpdate("hero_image_url", e.target.value)}
                   placeholder="https://..."
                   className="rounded-xl h-12"
@@ -103,20 +113,20 @@ export default function AdminContent() {
                 </div>
               </div>
               <Button onClick={() => saveBlock("hero_image_url", "Hero section image")} size="sm" className="gradient-blue gap-2 rounded-lg">
-                <Save className="w-4 h-4" /> Save
+                <Save className="w-4 h-4" /> Save Image URL
               </Button>
             </div>
           </div>
           <div className="space-y-2">
             <Label>Sub-headline Description</Label>
             <Textarea 
-              value={formData["hero_subheadline"] || ""} 
+              value={formData["hero_subheadline"]} 
               onChange={(e) => handleUpdate("hero_subheadline", e.target.value)}
               placeholder="Empower your online presence..."
               className="rounded-xl min-h-[100px]"
             />
             <Button onClick={() => saveBlock("hero_subheadline", "Hero section description text")} size="sm" className="gradient-blue gap-2 rounded-lg">
-              <Save className="w-4 h-4" /> Save
+              <Save className="w-4 h-4" /> Save Description
             </Button>
           </div>
         </CardContent>
@@ -140,7 +150,7 @@ export default function AdminContent() {
             <div className="space-y-2">
               <Label>About Section Headline</Label>
               <Input 
-                value={formData["about_headline"] || ""} 
+                value={formData["about_headline"]} 
                 onChange={(e) => handleUpdate("about_headline", e.target.value)}
                 placeholder="e.g. Reliable Web Hosting Born in Bangladesh"
                 className="rounded-xl h-12"
@@ -153,7 +163,7 @@ export default function AdminContent() {
               <Label>About Image URL</Label>
               <div className="flex gap-2">
                 <Input 
-                  value={formData["about_image_url"] || ""} 
+                  value={formData["about_image_url"]} 
                   onChange={(e) => handleUpdate("about_image_url", e.target.value)}
                   placeholder="https://..."
                   className="rounded-xl h-12"
@@ -170,7 +180,7 @@ export default function AdminContent() {
           <div className="space-y-2">
             <Label>Main Paragraph</Label>
             <Textarea 
-              value={formData["about_desc_1"] || ""} 
+              value={formData["about_desc_1"]} 
               onChange={(e) => handleUpdate("about_desc_1", e.target.value)}
               placeholder="AmarShebaHost was founded..."
               className="rounded-xl min-h-[100px]"
@@ -182,7 +192,7 @@ export default function AdminContent() {
           <div className="space-y-2">
             <Label>Secondary Paragraph</Label>
             <Textarea 
-              value={formData["about_desc_2"] || ""} 
+              value={formData["about_desc_2"]} 
               onChange={(e) => handleUpdate("about_desc_2", e.target.value)}
               placeholder="With our servers located..."
               className="rounded-xl min-h-[100px]"
