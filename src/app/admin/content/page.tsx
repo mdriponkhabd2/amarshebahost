@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Save, Image as ImageIcon, Type, FileText, Link2, Palette, ShoppingCart, Share2, CreditCard, Globe } from "lucide-react";
+import { Save, Image as ImageIcon, Type, FileText, Link2, Palette, ShoppingCart, Share2, CreditCard, Globe, Zap, LogIn, Layout } from "lucide-react";
 
 const DEFAULT_CONTENT: Record<string, string> = {
   "website_logo_url": "",
@@ -77,7 +77,7 @@ export default function AdminContent() {
     <div className="p-8 max-w-5xl mx-auto space-y-8 pb-20">
       <div>
         <h1 className="text-3xl font-bold mb-2 text-gradient">Website Content Manager</h1>
-        <p className="text-muted-foreground">Manage branding, icons, social links, and policies via simple URLs.</p>
+        <p className="text-muted-foreground">Manage branding, hero content, buttons, and service links in real-time.</p>
       </div>
 
       {/* Branding Section */}
@@ -89,11 +89,11 @@ export default function AdminContent() {
             </div>
             <div>
               <CardTitle>Site Branding & Icons</CardTitle>
-              <CardDescription>Update your logo, favicon and payment methods image link.</CardDescription>
+              <CardDescription>Update your logo and favicon.</CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-8 space-y-8">
+        <CardContent className="p-8 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-3">
               <Label className="flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Main Logo URL</Label>
@@ -116,24 +116,183 @@ export default function AdminContent() {
               <Button onClick={() => saveBlock("website_favicon_url", "Website Favicon")} variant="outline" className="w-full rounded-xl">Update Favicon</Button>
             </div>
           </div>
+        </CardContent>
+      </Card>
 
-          <div className="space-y-3 pt-4 border-t">
-            <Label className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> Payment Methods Image URL (Footer Banner)</Label>
+      {/* Auth Links (Sign In / Sign Up) */}
+      <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">
+        <CardHeader className="bg-muted/30 border-b">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center">
+              <LogIn className="w-5 h-5" />
+            </div>
+            <div>
+              <CardTitle>Authentication Links</CardTitle>
+              <CardDescription>Set the URLs for Sign In and Sign Up buttons (Navbar & Hero).</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-8 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-3 p-4 border rounded-2xl bg-muted/10">
+              <Label className="font-bold">Sign In Button URL</Label>
+              <Input 
+                value={formData["hero_signin_url"]} 
+                onChange={(e) => handleUpdate("hero_signin_url", e.target.value)} 
+                placeholder="https://client.amarshebahost.com/login"
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("hero_signin_url", "Sign In Link")} size="sm" className="w-full rounded-xl gradient-blue">Save Sign In Link</Button>
+            </div>
+            <div className="space-y-3 p-4 border rounded-2xl bg-muted/10">
+              <Label className="font-bold">Sign Up Button URL</Label>
+              <Input 
+                value={formData["hero_signup_url"]} 
+                onChange={(e) => handleUpdate("hero_signup_url", e.target.value)} 
+                placeholder="https://client.amarshebahost.com/register"
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("hero_signup_url", "Sign Up Link")} size="sm" className="w-full rounded-xl gradient-blue">Save Sign Up Link</Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Hero Content Section */}
+      <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">
+        <CardHeader className="bg-muted/30 border-b">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+              <Layout className="w-5 h-5" />
+            </div>
+            <CardTitle>Hero Section Content</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="p-8 space-y-6">
+          <div className="space-y-3">
+            <Label className="font-bold">Main Headline</Label>
+            <Input 
+              value={formData["hero_headline"]} 
+              onChange={(e) => handleUpdate("hero_headline", e.target.value)} 
+              className="rounded-xl font-bold" 
+            />
+            <Button onClick={() => saveBlock("hero_headline", "Hero Headline")} size="sm" variant="outline" className="rounded-xl">Save Headline</Button>
+          </div>
+          <div className="space-y-3">
+            <Label className="font-bold">Sub-headline Description</Label>
+            <Textarea 
+              value={formData["hero_subheadline"]} 
+              onChange={(e) => handleUpdate("hero_subheadline", e.target.value)} 
+              className="rounded-xl min-h-[100px]" 
+            />
+            <Button onClick={() => saveBlock("hero_subheadline", "Hero Subheadline")} size="sm" variant="outline" className="rounded-xl">Save Description</Button>
+          </div>
+          <div className="space-y-3">
+            <Label className="font-bold">Hero Image URL</Label>
+            <Input 
+              value={formData["hero_image_url"]} 
+              onChange={(e) => handleUpdate("hero_image_url", e.target.value)} 
+              placeholder="https://..."
+              className="rounded-xl"
+            />
+            <Button onClick={() => saveBlock("hero_image_url", "Hero Image")} size="sm" variant="outline" className="rounded-xl">Save Hero Image</Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Service Purchase Links */}
+      <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">
+        <CardHeader className="bg-muted/30 border-b">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+              <ShoppingCart className="w-5 h-5" />
+            </div>
+            <div>
+              <CardTitle>Service Purchase Links</CardTitle>
+              <CardDescription>Manage the "Buy Now" links for all service categories.</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3 p-4 border rounded-2xl bg-muted/10">
+            <Label className="font-bold flex items-center gap-2"><Globe className="w-4 h-4 text-blue-500" /> Web Hosting Buy Link</Label>
+            <Input 
+              value={formData["service_hosting_url"]} 
+              onChange={(e) => handleUpdate("service_hosting_url", e.target.value)} 
+              placeholder="https://..."
+              className="rounded-xl"
+            />
+            <Button onClick={() => saveBlock("service_hosting_url", "Web hosting purchase link")} size="sm" className="w-full rounded-xl gradient-blue">Save Link</Button>
+          </div>
+          <div className="space-y-3 p-4 border rounded-2xl bg-muted/10">
+            <Label className="font-bold flex items-center gap-2"><Globe className="w-4 h-4 text-indigo-500" /> Reseller Hosting Buy Link</Label>
+            <Input 
+              value={formData["service_reseller_url"]} 
+              onChange={(e) => handleUpdate("service_reseller_url", e.target.value)} 
+              placeholder="https://..."
+              className="rounded-xl"
+            />
+            <Button onClick={() => saveBlock("service_reseller_url", "Reseller purchase link")} size="sm" className="w-full rounded-xl gradient-blue">Save Link</Button>
+          </div>
+          <div className="space-y-3 p-4 border rounded-2xl bg-muted/10">
+            <Label className="font-bold flex items-center gap-2"><Globe className="w-4 h-4 text-purple-500" /> VPS Hosting Buy Link</Label>
+            <Input 
+              value={formData["service_vps_url"]} 
+              onChange={(e) => handleUpdate("service_vps_url", e.target.value)} 
+              placeholder="https://..."
+              className="rounded-xl"
+            />
+            <Button onClick={() => saveBlock("service_vps_url", "VPS purchase link")} size="sm" className="w-full rounded-xl gradient-blue">Save Link</Button>
+          </div>
+          <div className="space-y-3 p-4 border rounded-2xl bg-muted/10">
+            <Label className="font-bold flex items-center gap-2"><Globe className="w-4 h-4 text-emerald-500" /> Domain Register Link</Label>
+            <Input 
+              value={formData["service_domain_url"]} 
+              onChange={(e) => handleUpdate("service_domain_url", e.target.value)} 
+              placeholder="https://..."
+              className="rounded-xl"
+            />
+            <Button onClick={() => saveBlock("service_domain_url", "Domain registration link")} size="sm" className="w-full rounded-xl gradient-blue">Save Link</Button>
+          </div>
+          <div className="space-y-3 p-4 border rounded-2xl bg-muted/10 md:col-span-2">
+            <Label className="font-bold flex items-center gap-2"><Zap className="w-4 h-4 text-yellow-500" /> BDIX Hosting / VPS Buy Link</Label>
+            <Input 
+              value={formData["service_bdix_url"]} 
+              onChange={(e) => handleUpdate("service_bdix_url", e.target.value)} 
+              placeholder="https://..."
+              className="rounded-xl"
+            />
+            <Button onClick={() => saveBlock("service_bdix_url", "BDIX service link")} size="sm" className="w-full rounded-xl gradient-blue">Save Link</Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Payment Banner */}
+      <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">
+        <CardHeader className="bg-muted/30 border-b">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
+              <CreditCard className="w-5 h-5" />
+            </div>
+            <CardTitle>Footer Payment Banner</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="p-8 space-y-4">
+          <Label className="font-bold">Payment Methods Image URL</Label>
+          <div className="flex gap-4">
             <Input 
               value={formData["payment_methods_image_url"]} 
               onChange={(e) => handleUpdate("payment_methods_image_url", e.target.value)} 
               className="rounded-xl h-12" 
               placeholder="https://link-to-payment-icons-banner.png" 
             />
-            <div className="flex gap-4">
-              <Button onClick={() => saveBlock("payment_methods_image_url", "Payment methods image")} className="gradient-blue flex-1 rounded-xl">Update Payment Banner</Button>
-              {formData["payment_methods_image_url"] && (
-                <div className="w-24 h-12 relative bg-muted rounded-xl border overflow-hidden">
-                  <img src={formData["payment_methods_image_url"]} alt="Preview" className="object-contain w-full h-full p-1" />
-                </div>
-              )}
-            </div>
+            <Button onClick={() => saveBlock("payment_methods_image_url", "Payment methods image")} className="gradient-blue px-8 rounded-xl">Update</Button>
           </div>
+          {formData["payment_methods_image_url"] && (
+            <div className="mt-4 p-4 bg-muted/20 rounded-2xl border border-dashed flex items-center justify-center">
+              <img src={formData["payment_methods_image_url"]} alt="Payment Preview" className="max-h-24 object-contain" />
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -167,7 +326,7 @@ export default function AdminContent() {
       <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">
         <CardHeader className="bg-muted/30 border-b">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center">
               <FileText className="w-5 h-5" />
             </div>
             <CardTitle>Legal & Policy Content</CardTitle>
