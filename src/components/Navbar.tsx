@@ -12,11 +12,15 @@ import {
   Server, 
   GraduationCap, 
   Zap, 
-  ShieldCheck, 
   UserCircle,
   Cpu,
   Layers,
-  HardDrive
+  HardDrive,
+  Search,
+  DollarSign,
+  ArrowRightLeft,
+  ShieldCheck,
+  MousePointerClick
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -31,10 +35,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useCollection, useMemoFirebase } from "@/firebase";
+import { collection, query, orderBy } from "firebase/firestore";
+import { useFirestore } from "@/firebase";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const db = useFirestore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,38 +52,66 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const hostingItems = [
-    { name: "BDIX Hosting", href: "#pricing", icon: Zap },
-    { name: "Student Offer", href: "#pricing", icon: GraduationCap },
-    { name: "Special Offer", href: "#pricing", icon: StarIcon },
-    { name: "Web Hosting", href: "#pricing", icon: Server },
-    { name: "VIP Hosting", href: "#pricing", icon: UserCircle },
-  ];
+  const navLinksQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, "navigationLinks"), orderBy("displayOrder", "asc"));
+  }, [db]);
 
-  const resellerItems = [
-    { name: "Alpha Reseller", href: "#pricing", icon: Cpu },
-    { name: "Master Reseller", href: "#pricing", icon: Layers },
-    { name: "Reseller Hosting", href: "#pricing", icon: HardDrive },
-  ];
+  const { data: navLinks } = useCollection(navLinksQuery);
 
-  function StarIcon(props: any) {
-    return (
-      <svg
-        {...props}
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-      </svg>
-    );
-  }
+  const filterLinks = (location: string) => {
+    return navLinks?.filter(link => link.location === location) || [];
+  };
+
+  const hostingItems = filterLinks("hosting");
+  const resellerItems = filterLinks("reseller");
+  const domainItems = filterLinks("domain");
+
+  // Default icons mapping
+  const getIcon = (title: string) => {
+    const t = title.toLowerCase();
+    if (t.includes("bdix")) return Zap;
+    if (t.includes("student")) return GraduationCap;
+    if (t.includes("special") || t.includes("offer")) return MousePointerClick;
+    if (t.includes("web")) return Server;
+    if (t.includes("vip")) return UserCircle;
+    if (t.includes("alpha")) return Cpu;
+    if (t.includes("master")) return Layers;
+    if (t.includes("reseller")) return HardDrive;
+    if (t.includes("registration")) return ShieldCheck;
+    if (t.includes("pricing")) return DollarSign;
+    if (t.includes("transfer")) return ArrowRightLeft;
+    return Globe;
+  };
+
+  const NavDropdown = ({ label, items }: { label: string; items: any[] }) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary transition-colors outline-none">
+        {label} <ChevronDown className="w-4 h-4" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-64 p-2 rounded-2xl shadow-xl border-border/50">
+        {items.length > 0 ? (
+          items.map((item) => {
+            const Icon = getIcon(item.title);
+            return (
+              <DropdownMenuItem key={item.id} asChild>
+                <Link href={item.url || "#"} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-accent transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-sm">{item.title}</span>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+            );
+          })
+        ) : (
+          <div className="p-4 text-xs text-muted-foreground italic text-center">Manage items in Admin Panel</div>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
   return (
     <nav
@@ -102,39 +138,9 @@ export function Navbar() {
             Home
           </Link>
 
-          {/* Hosting Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary transition-colors outline-none">
-              Hosting <ChevronDown className="w-4 h-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56 p-2 rounded-2xl shadow-xl border-border/50">
-              {hostingItems.map((item) => (
-                <DropdownMenuItem key={item.name} asChild>
-                  <Link href={item.href} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer">
-                    <item.icon className="w-4 h-4 text-primary" />
-                    <span className="font-medium">{item.name}</span>
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Reseller Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary transition-colors outline-none">
-              Reseller <ChevronDown className="w-4 h-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56 p-2 rounded-2xl shadow-xl border-border/50">
-              {resellerItems.map((item) => (
-                <DropdownMenuItem key={item.name} asChild>
-                  <Link href={item.href} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer">
-                    <item.icon className="w-4 h-4 text-primary" />
-                    <span className="font-medium">{item.name}</span>
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <NavDropdown label="Hosting" items={hostingItems} />
+          <NavDropdown label="Reseller" items={resellerItems} />
+          <NavDropdown label="Domain" items={domainItems} />
 
           <Link href="#about" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
             About
@@ -149,7 +155,7 @@ export function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden text-foreground"
+          className="md:hidden text-foreground p-2"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X /> : <Menu />}
@@ -158,34 +164,33 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b animate-in slide-in-from-top duration-300 h-[calc(100vh-100%)] overflow-y-auto">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b animate-in slide-in-from-top duration-300 h-[calc(100vh-100%)] overflow-y-auto shadow-2xl">
           <div className="flex flex-col p-6 gap-2">
             <Link href="/" className="text-lg font-semibold py-2" onClick={() => setIsMobileMenuOpen(false)}>
               Home
             </Link>
             
             <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="hosting" className="border-none">
-                <AccordionTrigger className="text-lg font-semibold py-2 hover:no-underline">Hosting</AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-2 pl-4 pb-4">
-                  {hostingItems.map((item) => (
-                    <Link key={item.name} href={item.href} className="text-muted-foreground flex items-center gap-2 py-1" onClick={() => setIsMobileMenuOpen(false)}>
-                      <item.icon className="w-4 h-4" /> {item.name}
-                    </Link>
-                  ))}
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="reseller" className="border-none">
-                <AccordionTrigger className="text-lg font-semibold py-2 hover:no-underline">Reseller</AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-2 pl-4 pb-4">
-                  {resellerItems.map((item) => (
-                    <Link key={item.name} href={item.href} className="text-muted-foreground flex items-center gap-2 py-1" onClick={() => setIsMobileMenuOpen(false)}>
-                      <item.icon className="w-4 h-4" /> {item.name}
-                    </Link>
-                  ))}
-                </AccordionContent>
-              </AccordionItem>
+              {[
+                { name: "Hosting", items: hostingItems },
+                { name: "Reseller", items: resellerItems },
+                { name: "Domain", items: domainItems }
+              ].map((cat) => (
+                <AccordionItem key={cat.name} value={cat.name.toLowerCase()} className="border-none">
+                  <AccordionTrigger className="text-lg font-semibold py-2 hover:no-underline">{cat.name}</AccordionTrigger>
+                  <AccordionContent className="flex flex-col gap-2 pl-4 pb-4">
+                    {cat.items.map((item) => {
+                      const Icon = getIcon(item.title);
+                      return (
+                        <Link key={item.id} href={item.url || "#"} className="text-muted-foreground flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-accent" onClick={() => setIsMobileMenuOpen(false)}>
+                          <Icon className="w-4 h-4 text-primary" /> {item.title}
+                        </Link>
+                      );
+                    })}
+                    {cat.items.length === 0 && <span className="text-xs italic text-muted-foreground">No items added</span>}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
             </Accordion>
 
             <Link href="#about" className="text-lg font-semibold py-2" onClick={() => setIsMobileMenuOpen(false)}>
@@ -194,7 +199,7 @@ export function Navbar() {
             <Link href="#contact" className="text-lg font-semibold py-2" onClick={() => setIsMobileMenuOpen(false)}>
               Support
             </Link>
-            <Button className="gradient-blue w-full mt-4">Get Started</Button>
+            <Button className="gradient-blue w-full mt-4 h-12 rounded-xl text-lg font-bold">Get Started</Button>
           </div>
         </div>
       )}

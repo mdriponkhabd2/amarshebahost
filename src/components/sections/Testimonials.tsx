@@ -54,7 +54,7 @@ export function Testimonials() {
                     alt={review.name}
                     width={48}
                     height={48}
-                    className="rounded-full shadow-inner"
+                    className="rounded-full shadow-inner object-cover"
                   />
                 ) : (
                   <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">

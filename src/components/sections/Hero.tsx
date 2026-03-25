@@ -48,7 +48,7 @@ export function Hero() {
           <div className="relative glass-card rounded-3xl p-4 transform hover:scale-[1.02] transition-transform duration-500">
             {heroImage?.imageUrl ? (
               <Image
-                src={heroImage.imageUrl || "/fallback-hosting.jpg"}
+                src={heroImage.imageUrl}
                 alt={heroImage.description || "Hosting Servers"}
                 width={600}
                 height={400}
