@@ -1,0 +1,126 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * AMARSHEBAHOST SECURITY RULES CONFIGURATION
+     * 
+     * Core Philosophy:
+     * This ruleset implements a CMS-style security model for a web hosting service. 
+     * It distinguishes between public consumers (who can read website content) 
+     * and administrators (who have full CRUD access to the website's configuration).
+     * 
+     * Data Structure:
+     * - /roles_admin/{userId}: A Role-Based Access Control (RBAC) collection. The presence of a UID 
+     *   document here grants global administrative permissions.
+     * - /features, /pricingPlans, /navigationLinks, /websiteContentBlocks: Publicly readable 
+     *   content collections managed by administrators.
+     * - /testimonials: Publicly readable only if the 'isApproved' flag is set to true.
+     * 
+     * Key Security Decisions:
+     * - Global Admin Role: Using a specific collection for admins allows for secure, 
+     *   centralized management of privileges without relying on custom claims.
+     * - Query-as-Permission (QAP): For testimonials, the rules enforce that non-admin 
+     *   users can only list or get documents where 'isApproved' is true.
+     * - Prototyping Flexibility: Rules enforce strict authorization (who can write) 
+     *   but allow flexible data shapes (what they write) to support rapid development.
+     */
+
+    // --- Helper Functions ---
+
+    /** @description Checks if the request is from an authenticated user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** @description Checks if the authenticated user has an entry in the roles_admin collection. */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    /** @description Combines admin check with document existence for destructive operations. */
+    function isAdminAndDocExists() {
+      return isAdmin() && resource != null;
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Administrative roles collection. Used to verify global admin status.
+     * @path /roles_admin/{userId}
+     * @allow (get) Any signed-in user checking their own status.
+     * @deny (list) Public users from listing all administrators.
+     * @principle Role-Based Access Control (RBAC) via document existence.
+     */
+    match /roles_admin/{userId} {
+      allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+      allow create, update, delete: if false; // Managed via Firebase Console or special script for safety.
+    }
+
+    /**
+     * @description Marketing features of the hosting service.
+     * @path /features/{featureId}
+     * @allow (list) Public users to see service features.
+     * @deny (update) Unauthorized users from changing website content.
+     * @principle Public read access with restricted admin-only writes.
+     */
+    match /features/{featureId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdminAndDocExists();
+    }
+
+    /**
+     * @description Pricing plans for web hosting services.
+     * @path /pricingPlans/{planId}
+     * @allow (get) Public users to view plan details.
+     * @deny (create) Non-admin users from adding new plans.
+     * @principle Public read access with restricted admin-only writes.
+     */
+    match /pricingPlans/{planId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdminAndDocExists();
+    }
+
+    /**
+     * @description Customer testimonials. Visibility depends on approval status.
+     * @path /testimonials/{testimonialId}
+     * @allow (list) Public users to see approved testimonials only.
+     * @deny (get) Public users from viewing unapproved testimonials.
+     * @principle Query-as-Permission (QAP) to filter sensitive content.
+     */
+    match /testimonials/{testimonialId} {
+      allow get, list: if isAdmin() || (resource != null && resource.data.isApproved == true);
+      allow create: if isAdmin();
+      allow update, delete: if isAdminAndDocExists();
+    }
+
+    /**
+     * @description Website navigation structure and links.
+     * @path /navigationLinks/{linkId}
+     * @allow (create) Admin setting up new 'Domain' or 'Reseller' links.
+     * @deny (delete) Unauthorized users from breaking site navigation.
+     * @principle Centralized admin control over dynamic website structure.
+     */
+    match /navigationLinks/{linkId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdminAndDocExists();
+    }
+
+    /**
+     * @description Generic content blocks for headlines, footers, and descriptions.
+     * @path /websiteContentBlocks/{blockId}
+     * @allow (update) Admin updating the 'hero_headline'.
+     * @deny (list) Access if the system is completely locked (though here it is public).
+     * @principle Decoupling website copy from code via admin-managed content blocks.
+     */
+    match /websiteContentBlocks/{blockId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update, delete: if isAdminAndDocExists();
+    }
+  }
+}

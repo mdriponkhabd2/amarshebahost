@@ -1,0 +1,330 @@
+{
+  "entities": {
+    "Feature": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Feature",
+      "type": "object",
+      "description": "Represents a key feature of the web hosting service, displayed to users on the AmarShebaHost website.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Feature entity."
+        },
+        "title": {
+          "type": "string",
+          "description": "The name of the feature (e.g., 'High Speed Servers', '99.9% Uptime Guarantee')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief, explanatory description of the feature's benefit or functionality."
+        },
+        "iconIdentifier": {
+          "type": "string",
+          "description": "A string representing the icon to be displayed for the feature (e.g., an icon library class name or a URL to an SVG)."
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "The numerical order in which the feature should be displayed on the website."
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "iconIdentifier",
+        "displayOrder"
+      ]
+    },
+    "PricingPlan": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PricingPlan",
+      "type": "object",
+      "description": "Defines a web hosting pricing plan offered by AmarShebaHost, including its name, cost, and included features.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the PricingPlan entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The marketing name of the pricing plan (e.g., 'Basic', 'Standard', 'Premium')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A short description or tagline summarizing the plan's purpose or target audience."
+        },
+        "price": {
+          "type": "number",
+          "description": "The numerical price of the plan."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency of the price (e.g., 'BDT' for Bangladeshi Taka, 'USD' for United States Dollar)."
+        },
+        "features": {
+          "type": "array",
+          "description": "A list of key features or benefits included in this specific pricing plan.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isPopular": {
+          "type": "boolean",
+          "description": "A flag indicating if this plan should be highlighted on the website as the 'most popular' option."
+        },
+        "callToActionUrl": {
+          "type": "string",
+          "description": "The URL for the 'Buy Now' button associated with this plan, directing users to purchase.",
+          "format": "uri"
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "The numerical order in which the pricing plan should be displayed on the website."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "price",
+        "currency",
+        "features",
+        "isPopular",
+        "callToActionUrl",
+        "displayOrder"
+      ]
+    },
+    "Testimonial": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Testimonial",
+      "type": "object",
+      "description": "Stores customer reviews and ratings to build trust and credibility for AmarShebaHost.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Testimonial entity."
+        },
+        "customerName": {
+          "type": "string",
+          "description": "The full name of the customer who provided the testimonial."
+        },
+        "customerTitle": {
+          "type": "string",
+          "description": "The customer's title or affiliation (e.g., 'CEO of ABC Corp', 'Small Business Owner')."
+        },
+        "reviewText": {
+          "type": "string",
+          "description": "The actual text content of the customer's review or feedback."
+        },
+        "rating": {
+          "type": "number",
+          "description": "The customer's rating, typically on a scale of 1 to 5 stars."
+        },
+        "datePosted": {
+          "type": "string",
+          "description": "The date and time when the testimonial was posted or recorded.",
+          "format": "date-time"
+        },
+        "isApproved": {
+          "type": "boolean",
+          "description": "A flag indicating whether the testimonial has been approved by an administrator for public display."
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "The numerical order in which the testimonial should appear on the website."
+        }
+      },
+      "required": [
+        "id",
+        "customerName",
+        "reviewText",
+        "rating",
+        "datePosted",
+        "isApproved",
+        "displayOrder"
+      ]
+    },
+    "NavigationLink": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "NavigationLink",
+      "type": "object",
+      "description": "Represents a menu item or link within the website's navigation, allowing for configurable links and hierarchical structures via an admin panel.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the NavigationLink entity."
+        },
+        "title": {
+          "type": "string",
+          "description": "The display text for the navigation link (e.g., 'Home', 'Pricing', 'Domain Registration')."
+        },
+        "url": {
+          "type": "string",
+          "description": "The destination URL for the navigation link.",
+          "format": "uri"
+        },
+        "location": {
+          "type": "string",
+          "description": "Specifies where the link is displayed on the website (e.g., 'header_main', 'footer', 'domain_submenu')."
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "The numerical order of the link within its specific location or among its sibling menu items."
+        },
+        "parentId": {
+          "type": "string",
+          "description": "Reference to another NavigationLink if this is a sub-item in a hierarchical menu. Null for top-level menu items. (Relationship: NavigationLink 1:N NavigationLink)"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "url",
+        "location",
+        "displayOrder"
+      ]
+    },
+    "WebsiteContentBlock": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "WebsiteContentBlock",
+      "type": "object",
+      "description": "A generic entity for storing configurable text content or blocks used throughout the website, such as headlines, descriptions, or footer text, manageable via an admin panel.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the WebsiteContentBlock entity."
+        },
+        "key": {
+          "type": "string",
+          "description": "A unique programmatic key to identify this content block (e.g., 'hero_headline', 'about_us_description', 'footer_copyright_text')."
+        },
+        "value": {
+          "type": "string",
+          "description": "The actual content of the block, which can be plain text, HTML, or markdown."
+        },
+        "contentType": {
+          "type": "string",
+          "description": "Specifies the type of content stored (e.g., 'plaintext', 'html', 'markdown') to aid in rendering and selecting the appropriate editor in an admin panel."
+        },
+        "description": {
+          "type": "string",
+          "description": "A descriptive explanation of the purpose or typical location of this content block on the website."
+        }
+      },
+      "required": [
+        "id",
+        "key",
+        "value",
+        "contentType",
+        "description"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "AdminRole",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Collection to store administrative roles. The existence of a document here, where the document ID matches a user's UID, grants that user admin privileges across the application. This is a DBAC implementation for global roles.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who is an administrator."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/features/{featureId}",
+        "definition": {
+          "entityName": "Feature",
+          "schema": {
+            "$ref": "#/backend/entities/Feature"
+          },
+          "description": "Stores key features of the web hosting service. Documents are publicly readable but only modifiable by administrators.",
+          "params": [
+            {
+              "name": "featureId",
+              "description": "The unique identifier for a specific feature."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/pricingPlans/{planId}",
+        "definition": {
+          "entityName": "PricingPlan",
+          "schema": {
+            "$ref": "#/backend/entities/PricingPlan"
+          },
+          "description": "Contains details for various web hosting pricing plans. Documents are publicly readable but only modifiable by administrators.",
+          "params": [
+            {
+              "name": "planId",
+              "description": "The unique identifier for a specific pricing plan."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/testimonials/{testimonialId}",
+        "definition": {
+          "entityName": "Testimonial",
+          "schema": {
+            "$ref": "#/backend/entities/Testimonial"
+          },
+          "description": "Stores customer testimonials. Documents are publicly readable only if 'isApproved' is true, and only modifiable by administrators. This supports QAPs for public lists.",
+          "params": [
+            {
+              "name": "testimonialId",
+              "description": "The unique identifier for a specific customer testimonial."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/navigationLinks/{linkId}",
+        "definition": {
+          "entityName": "NavigationLink",
+          "schema": {
+            "$ref": "#/backend/entities/NavigationLink"
+          },
+          "description": "Manages all navigation menu items and links across the website, including hierarchical structures (via parentId) and dynamic URLs. Documents are publicly readable but only modifiable by administrators.",
+          "params": [
+            {
+              "name": "linkId",
+              "description": "The unique identifier for a specific navigation link."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/websiteContentBlocks/{blockId}",
+        "definition": {
+          "entityName": "WebsiteContentBlock",
+          "schema": {
+            "$ref": "#/backend/entities/WebsiteContentBlock"
+          },
+          "description": "A generic collection for storing various configurable text or HTML content blocks used throughout the website (e.g., headlines, descriptions). Documents are publicly readable but only modifiable by administrators.",
+          "params": [
+            {
+              "name": "blockId",
+              "description": "The unique identifier for a specific content block."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to be highly secure, scalable, and debuggable, adhering strictly to the core design principles. The primary focus is on managing public-facing website content (Features, Pricing Plans, Testimonials, Navigation Links, and Website Content Blocks) and providing an administrative interface for modifying this content.\n\n**Authorization Independence:** This design explicitly avoids hierarchical authorization dependencies by ensuring that access to any document does not rely on fetching data from a parent document using `get()`. For instance, `NavigationLink` documents can reference a `parentId` for data structuring (e.g., creating sub-menus), but this `parentId` is a data relationship, not an authorization dependency. All documents in the primary content collections (`/features`, `/pricingPlans`, `/testimonials`, `/navigationLinks`, `/websiteContentBlocks`) are either publicly readable or their access is determined solely by the document's own fields (like `isApproved` for `Testimonial`) or the user's global administrative role.\n\n**QAPs (Rules are not Filters):**\n*   For collections like `/features`, `/pricingPlans`, `/navigationLinks`, and `/websiteContentBlocks`, all documents within these collections are intended for public display. Therefore, a `list` operation is inherently secure as all retrieved documents are meant to be public. Security rules will simply allow public read access.\n*   For `/testimonials`, the design includes an `isApproved` field. Security rules will enforce that only documents with `isApproved: true` are publicly readable. While clients will typically query `where('isApproved', '==', true)`, the security rule acts as a final gatekeeper, ensuring that any `list` operation (even a malformed one trying to read unapproved testimonials) will only return approved documents to non-admin users, thus upholding the QAP principle.\n\n**DBAC and Admin Access:** Administrative access for modifying any of these content collections will be managed via a dedicated `roles_admin` collection (`/roles_admin/{uid}`). The mere existence of a document in this collection with a user's `uid` as its ID grants them administrative privileges. This avoids custom claims and simplifies security rules, making admin checks a straightforward `exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid))` operation for write permissions across all content-management collections.\n\n**Structural Segregation:** Each collection (`/features`, `/pricingPlans`, `/testimonials`, `/navigationLinks`, `/websiteContentBlocks`) maintains a homogeneous security posture. For example, all `Feature` documents are public read, admin write. This simplifies rule writing significantly. The `NavigationLink` entity's `location` field allows for conceptual segregation (e.g., 'header_main', 'domain_submenu') without requiring separate physical collections, as the access patterns remain the same.\n\n**User Request Fulfillment:** The user's request to have dynamic, admin-manageable links for \"domain\" and \"hosting reseller\" options, including sub-titles and URLs, is directly addressed by the `NavigationLink` entity. The `title` and `url` fields are editable by administrators. The `parentId` field facilitates hierarchical menus (e.g., 'Domain' as a parent, with 'Domain Registration', 'Domain Pricing', 'Domain Transfer' as children). The `WebsiteContentBlock` provides generic, key-value storage for other dynamic text content like headlines or descriptions, also manageable by admins."
+  }
+}
