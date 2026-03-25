@@ -3,8 +3,8 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Link2, LogOut, Settings, Globe, FileText } from "lucide-react";
+import { usePathname, useRouter } from "navigation";
+import { LayoutDashboard, Link2, LogOut, Settings, Globe, FileText, CreditCard } from "lucide-react";
 
 /**
  * AdminLayout Component
@@ -99,6 +99,15 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           >
             <Link2 className="w-5 h-5" />
             <span>Navigation Links</span>
+          </Link>
+          <Link 
+            href="/admin/pricing" 
+            className={`flex items-center gap-3 px-5 py-4 rounded-2xl transition-all ${
+              pathname === "/admin/pricing" ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:bg-accent hover:text-foreground"
+            }`}
+          >
+            <CreditCard className="w-5 h-5" />
+            <span>Pricing Plans</span>
           </Link>
           <Link 
             href="/admin/domains" 
