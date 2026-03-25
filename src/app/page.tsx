@@ -6,6 +6,7 @@ import { DomainSearch } from "@/components/sections/DomainSearch";
 import { Pricing } from "@/components/sections/Pricing";
 import { About } from "@/components/sections/About";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
 import { Footer } from "@/components/sections/Footer";
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
       <Pricing />
       <About />
       <Testimonials />
+      <WhyChooseUs />
       <Footer />
     </main>
   );
