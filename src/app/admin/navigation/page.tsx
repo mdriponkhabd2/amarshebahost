@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -11,6 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, Plus, GripVertical, ExternalLink } from "lucide-react";
 
+/**
+ * AdminNavigation Component
+ * Manages the dynamic links for the website's navigation menus.
+ */
 export default function AdminNavigation() {
   const db = useFirestore();
   const [newTitle, setNewTitle] = useState("");
@@ -52,7 +55,7 @@ export default function AdminNavigation() {
   return (
     <div className="p-8 max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold mb-2">Navigation Manager</h1>
+        <h1 className="text-3xl font-bold mb-2 text-gradient">Navigation Manager</h1>
         <p className="text-muted-foreground">Manage links for Hosting, Reseller, and Domain dropdown menus.</p>
       </div>
 
