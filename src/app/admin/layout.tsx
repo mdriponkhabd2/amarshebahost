@@ -3,7 +3,7 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, Link2, LogOut, Settings, Globe, FileText, CreditCard } from "lucide-react";
 
 /**
