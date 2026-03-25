@@ -41,9 +41,11 @@ import { collection, query, orderBy } from "firebase/firestore";
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const db = useFirestore();
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -96,34 +98,45 @@ export function Navbar() {
     return Globe;
   };
 
-  const NavDropdown = ({ label, items }: { label: string; items: any[] }) => (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary transition-colors outline-none">
-        {label} <ChevronDown className="w-4 h-4" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-64 p-2 rounded-2xl shadow-xl border-border/50">
-        {items.length > 0 ? (
-          items.map((item) => {
-            const Icon = getIcon(item.title);
-            return (
-              <DropdownMenuItem key={item.id} asChild>
-                <Link href={item.url || "#"} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-accent transition-colors">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-semibold text-sm">{item.title}</span>
-                  </div>
-                </Link>
-              </DropdownMenuItem>
-            );
-          })
-        ) : (
-          <div className="p-4 text-xs text-muted-foreground italic text-center">Manage items in Admin Panel</div>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+  const NavDropdown = ({ label, items }: { label: string; items: any[] }) => {
+    // Prevent hydration mismatch by only rendering dropdown content on client
+    if (!mounted) {
+      return (
+        <button className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary transition-colors outline-none">
+          {label} <ChevronDown className="w-4 h-4" />
+        </button>
+      );
+    }
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary transition-colors outline-none">
+          {label} <ChevronDown className="w-4 h-4" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-64 p-2 rounded-2xl shadow-xl border-border/50">
+          {items.length > 0 ? (
+            items.map((item) => {
+              const Icon = getIcon(item.title);
+              return (
+                <DropdownMenuItem key={item.id} asChild>
+                  <Link href={item.url || "#"} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-accent transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm">{item.title}</span>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+              );
+            })
+          ) : (
+            <div className="p-4 text-xs text-muted-foreground italic text-center">Manage items in Admin Panel</div>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  };
 
   return (
     <nav
