@@ -1,0 +1,35 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-server",
+      "description": "Modern data center with glowing servers",
+      "imageUrl": "https://picsum.photos/seed/hosting1/1200/800",
+      "imageHint": "server datacenter"
+    },
+    {
+      "id": "about-support",
+      "description": "Customer support representative in Bangladesh office",
+      "imageUrl": "https://picsum.photos/seed/hosting2/800/600",
+      "imageHint": "customer support"
+    },
+    {
+      "id": "user-1",
+      "description": "Happy customer testimonial",
+      "imageUrl": "https://picsum.photos/seed/user1/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "user-2",
+      "description": "Happy customer testimonial",
+      "imageUrl": "https://picsum.photos/seed/user2/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "user-3",
+      "description": "Happy customer testimonial",
+      "imageUrl": "https://picsum.photos/seed/user3/100/100",
+      "imageHint": "person portrait"
+    }
+  ]
+}
