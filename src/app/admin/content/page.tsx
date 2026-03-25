@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Save, Image as ImageIcon, Type, FileText, Link2, Palette } from "lucide-react";
+import { Save, Image as ImageIcon, Type, FileText, Link2, Palette, ShoppingCart } from "lucide-react";
 
 const DEFAULT_CONTENT: Record<string, string> = {
   "website_logo_url": "",
@@ -23,12 +23,17 @@ const DEFAULT_CONTENT: Record<string, string> = {
   "about_headline": "Reliable Web Hosting\nBorn in Bangladesh",
   "about_desc_1": "AmarShebaHost was founded with a single mission: to provide high-quality, world-class hosting solutions at affordable prices for the Bangladeshi market.",
   "about_desc_2": "With our servers located in strategic global data centers and a local support team ready to assist you in Bengali and English.",
-  "about_image_url": "https://picsum.photos/seed/hosting2/800/600"
+  "about_image_url": "https://picsum.photos/seed/hosting2/800/600",
+  "service_hosting_url": "#pricing",
+  "service_reseller_url": "#pricing",
+  "service_vps_url": "#pricing",
+  "service_domain_url": "#pricing",
+  "service_bdix_url": "#pricing"
 };
 
 /**
  * AdminContent Component
- * Manages branding, Hero, and About sections.
+ * Manages branding, Hero, About, and Service CTA links.
  */
 export default function AdminContent() {
   const db = useFirestore();
@@ -217,6 +222,80 @@ export default function AdminContent() {
             <Button onClick={() => saveBlock("hero_subheadline", "Hero section description text")} size="sm" className="gradient-blue gap-2 rounded-lg">
               <Save className="w-4 h-4" /> Save Description
             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Service Links Management */}
+      <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center">
+              <ShoppingCart className="w-5 h-5" />
+            </div>
+            <div>
+              <CardTitle>Service Buy Links</CardTitle>
+              <CardDescription>Manage where the "Buy Now" buttons in the info section lead.</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>Web Hosting Buy URL</Label>
+              <Input 
+                value={formData["service_hosting_url"]} 
+                onChange={(e) => handleUpdate("service_hosting_url", e.target.value)}
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("service_hosting_url", "Service Hosting Buy URL")} size="sm" variant="outline" className="rounded-lg">
+                <Save className="w-4 h-4 mr-2" /> Save Link
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <Label>Reseller Hosting Buy URL</Label>
+              <Input 
+                value={formData["service_reseller_url"]} 
+                onChange={(e) => handleUpdate("service_reseller_url", e.target.value)}
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("service_reseller_url", "Service Reseller Buy URL")} size="sm" variant="outline" className="rounded-lg">
+                <Save className="w-4 h-4 mr-2" /> Save Link
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <Label>VPS Hosting Buy URL</Label>
+              <Input 
+                value={formData["service_vps_url"]} 
+                onChange={(e) => handleUpdate("service_vps_url", e.target.value)}
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("service_vps_url", "Service VPS Buy URL")} size="sm" variant="outline" className="rounded-lg">
+                <Save className="w-4 h-4 mr-2" /> Save Link
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <Label>Domain Registration Buy URL</Label>
+              <Input 
+                value={formData["service_domain_url"]} 
+                onChange={(e) => handleUpdate("service_domain_url", e.target.value)}
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("service_domain_url", "Service Domain Buy URL")} size="sm" variant="outline" className="rounded-lg">
+                <Save className="w-4 h-4 mr-2" /> Save Link
+              </Button>
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label>BDIX Hosting / RDP Buy URL</Label>
+              <Input 
+                value={formData["service_bdix_url"]} 
+                onChange={(e) => handleUpdate("service_bdix_url", e.target.value)}
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("service_bdix_url", "Service BDIX Buy URL")} size="sm" variant="outline" className="rounded-lg">
+                <Save className="w-4 h-4 mr-2" /> Save Link
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

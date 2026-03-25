@@ -3,12 +3,34 @@
 
 import { CheckCircle2, Server, Globe, ShieldCheck, Search, Database, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { collection, query } from "firebase/firestore";
 
 /**
  * ServicesInfo Component
  * Displays detailed textual information about various hosting and domain services.
+ * Now pulls CTA links dynamically from the Admin Panel.
  */
 export function ServicesInfo() {
+  const db = useFirestore();
+
+  const contentQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, "websiteContentBlocks"));
+  }, [db]);
+
+  const { data: blocks } = useCollection(contentQuery);
+
+  const getBlockValue = (key: string, defaultValue: string) => {
+    return blocks?.find(b => b.id === key)?.value || defaultValue;
+  };
+
+  const handleRedirect = (url: string) => {
+    if (url && url !== "#") {
+      window.location.href = url;
+    }
+  };
+
   const serviceBlocks = [
     {
       title: "Web Hosting in Bangladesh",
@@ -16,7 +38,8 @@ export function ServicesInfo() {
       items: ["BDIX Budget Hosting", "USA Budget Hosting", "BDIX Premium Hosting", "USA Premium Hosting"],
       icon: Server,
       color: "text-blue-600",
-      cta: "Buy Web Hosting"
+      cta: "Buy Web Hosting",
+      url: getBlockValue("service_hosting_url", "#pricing")
     },
     {
       title: "Reseller Hosting In Bangladesh",
@@ -24,7 +47,8 @@ export function ServicesInfo() {
       items: ["BDIX Reseller Hosting", "USA Reseller Hosting", "Standard Reseller Hosting"],
       icon: Database,
       color: "text-indigo-600",
-      cta: "Buy Reseller Hosting"
+      cta: "Buy Reseller Hosting",
+      url: getBlockValue("service_reseller_url", "#pricing")
     },
     {
       title: "VPS Hosting in Bangladesh",
@@ -32,7 +56,8 @@ export function ServicesInfo() {
       items: ["BDIX VPS", "BDIX RDP Server", "USA VPS", "USA RDP Server"],
       icon: ShieldCheck,
       color: "text-purple-600",
-      cta: "Buy VPS Now"
+      cta: "Buy VPS Now",
+      url: getBlockValue("service_vps_url", "#pricing")
     },
     {
       title: "Domain Registration in Bangladesh",
@@ -40,9 +65,12 @@ export function ServicesInfo() {
       items: ["Domain Registration", "Domain Transfer", "Premium Domains"],
       icon: Search,
       color: "text-emerald-600",
-      cta: "Register Domain"
+      cta: "Register Domain",
+      url: getBlockValue("service_domain_url", "#pricing")
     }
   ];
+
+  const bdixUrl = getBlockValue("service_bdix_url", "#pricing");
 
   return (
     <section className="py-20 bg-[#F8FAFC] border-t border-border/50">
@@ -69,7 +97,7 @@ export function ServicesInfo() {
               </div>
               <Button 
                 className="w-full gradient-blue h-12 rounded-xl font-bold group"
-                onClick={() => window.location.href = "#pricing"}
+                onClick={() => handleRedirect(service.url)}
               >
                 {service.cta} <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -93,7 +121,7 @@ export function ServicesInfo() {
               <Button 
                 variant="outline" 
                 className="rounded-xl px-8 border-2"
-                onClick={() => window.location.href = "#pricing"}
+                onClick={() => handleRedirect(bdixUrl)}
               >
                 Get Started with BDIX
               </Button>
@@ -105,8 +133,8 @@ export function ServicesInfo() {
                 Connect your business to millions of local users with less than 5ms latency via BDIX connectivity.
               </p>
               <div className="flex flex-col gap-2">
-                 <Button size="sm" className="gradient-blue rounded-xl h-10 font-bold" onClick={() => window.location.href = "#pricing"}>Buy BDIX VPS</Button>
-                 <Button size="sm" variant="ghost" className="rounded-xl h-10 font-bold" onClick={() => window.location.href = "#pricing"}>RDP Servers</Button>
+                 <Button size="sm" className="gradient-blue rounded-xl h-10 font-bold" onClick={() => handleRedirect(bdixUrl)}>Buy BDIX VPS</Button>
+                 <Button size="sm" variant="ghost" className="rounded-xl h-10 font-bold" onClick={() => handleRedirect(bdixUrl)}>RDP Servers</Button>
               </div>
             </div>
           </div>
