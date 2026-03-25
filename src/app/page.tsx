@@ -19,9 +19,9 @@ export default function Home() {
       <Features />
       <Pricing />
       <About />
-      <Testimonials />
       <WhyChooseUs />
       <ServicesInfo />
+      <Testimonials />
       <Footer />
     </main>
   );

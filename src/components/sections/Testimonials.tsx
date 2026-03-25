@@ -1,7 +1,16 @@
 
+"use client";
+
+import * as React from "react";
 import { Star, User } from "lucide-react";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 
 const reviews = [
   {
@@ -25,50 +34,88 @@ const reviews = [
     image: PlaceHolderImages.find(img => img.id === "user-3"),
     rating: 5,
   },
+  {
+    name: "Rakib Uddin",
+    role: "Software Engineer",
+    content: "The NVMe SSD storage really makes a difference. My WordPress site loads in under a second now. Great job AmarShebaHost!",
+    image: PlaceHolderImages.find(img => img.id === "user-1"),
+    rating: 5,
+  },
+  {
+    name: "Nusrat Jahan",
+    role: "Freelance Designer",
+    content: "Excellent customer service and very stable hosting. I've never faced any downtime in the last 12 months.",
+    image: PlaceHolderImages.find(img => img.id === "user-2"),
+    rating: 5,
+  },
 ];
 
 export function Testimonials() {
+  const [api, setApi] = React.useState<CarouselApi>();
+
+  // Auto-scroll logic
+  React.useEffect(() => {
+    if (!api) return;
+
+    const intervalId = setInterval(() => {
+      api.scrollNext();
+    }, 4000); // Scroll every 4 seconds
+
+    return () => clearInterval(intervalId);
+  }, [api]);
+
   return (
-    <section className="py-24 bg-accent/10">
+    <section className="py-24 bg-accent/10 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">What Our Clients Say</h2>
+          <h2 className="text-4xl font-bold mb-4 text-gradient">What Our Clients Say</h2>
           <p className="text-muted-foreground text-lg">Trusted by thousands of businesses across Bangladesh.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {reviews.map((review, idx) => (
-            <div key={idx} className="bg-white p-8 rounded-3xl shadow-sm border border-border/50 flex flex-col justify-between">
-              <div>
-                <div className="flex gap-1 mb-6">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-                <p className="text-lg italic text-foreground mb-8">"{review.content}"</p>
-              </div>
-              <div className="flex items-center gap-4 border-t pt-6">
-                {review.image?.imageUrl ? (
-                  <Image 
-                    src={review.image.imageUrl} 
-                    alt={review.name}
-                    width={48}
-                    height={48}
-                    className="rounded-full shadow-inner object-cover"
-                  />
-                ) : (
-                  <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
-                    <User className="w-6 h-6 text-muted-foreground" />
+        <Carousel
+          setApi={setApi}
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {reviews.map((review, idx) => (
+              <CarouselItem key={idx} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                <div className="bg-white p-8 rounded-3xl shadow-sm border border-border/50 flex flex-col justify-between h-full hover:shadow-xl transition-shadow duration-300">
+                  <div>
+                    <div className="flex gap-1 mb-6">
+                      {[...Array(review.rating)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                    <p className="text-lg italic text-foreground mb-8">"{review.content}"</p>
                   </div>
-                )}
-                <div>
-                  <div className="font-bold text-base">{review.name}</div>
-                  <div className="text-sm text-muted-foreground">{review.role}</div>
+                  <div className="flex items-center gap-4 border-t pt-6">
+                    {review.image?.imageUrl ? (
+                      <Image 
+                        src={review.image.imageUrl} 
+                        alt={review.name}
+                        width={48}
+                        height={48}
+                        className="rounded-full shadow-inner object-cover"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center">
+                        <User className="w-6 h-6 text-muted-foreground" />
+                      </div>
+                    )}
+                    <div>
+                      <div className="font-bold text-base">{review.name}</div>
+                      <div className="text-sm text-muted-foreground">{review.role}</div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
     </section>
   );
