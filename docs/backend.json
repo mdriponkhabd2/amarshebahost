@@ -1,5 +1,36 @@
+
 {
   "entities": {
+    "DomainPrice": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DomainPrice",
+      "type": "object",
+      "description": "Represents the pricing information for a specific domain extension (TLD).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the domain price record."
+        },
+        "tld": {
+          "type": "string",
+          "description": "The domain extension (e.g., '.com', '.net')."
+        },
+        "price": {
+          "type": "string",
+          "description": "The display price for the extension (e.g., '$9.99/yr')."
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "Order in which this extension appears in the search list."
+        }
+      },
+      "required": [
+        "id",
+        "tld",
+        "price",
+        "displayOrder"
+      ]
+    },
     "Feature": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Feature",
@@ -235,11 +266,27 @@
           "schema": {
             "$ref": "#/backend/entities/User"
           },
-          "description": "Collection to store administrative roles. The existence of a document here, where the document ID matches a user's UID, grants that user admin privileges across the application. This is a DBAC implementation for global roles.",
+          "description": "Collection to store administrative roles.",
           "params": [
             {
               "name": "userId",
               "description": "The unique ID of the user who is an administrator."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/domainPrices/{priceId}",
+        "definition": {
+          "entityName": "DomainPrice",
+          "schema": {
+            "$ref": "#/backend/entities/DomainPrice"
+          },
+          "description": "Stores pricing for various domain extensions.",
+          "params": [
+            {
+              "name": "priceId",
+              "description": "The unique identifier for a domain price."
             }
           ]
         }
@@ -251,7 +298,7 @@
           "schema": {
             "$ref": "#/backend/entities/Feature"
           },
-          "description": "Stores key features of the web hosting service. Documents are publicly readable but only modifiable by administrators.",
+          "description": "Stores key features of the web hosting service.",
           "params": [
             {
               "name": "featureId",
@@ -267,7 +314,7 @@
           "schema": {
             "$ref": "#/backend/entities/PricingPlan"
           },
-          "description": "Contains details for various web hosting pricing plans. Documents are publicly readable but only modifiable by administrators.",
+          "description": "Contains details for various web hosting pricing plans.",
           "params": [
             {
               "name": "planId",
@@ -283,7 +330,7 @@
           "schema": {
             "$ref": "#/backend/entities/Testimonial"
           },
-          "description": "Stores customer testimonials. Documents are publicly readable only if 'isApproved' is true, and only modifiable by administrators. This supports QAPs for public lists.",
+          "description": "Stores customer testimonials.",
           "params": [
             {
               "name": "testimonialId",
@@ -299,7 +346,7 @@
           "schema": {
             "$ref": "#/backend/entities/NavigationLink"
           },
-          "description": "Manages all navigation menu items and links across the website, including hierarchical structures (via parentId) and dynamic URLs. Documents are publicly readable but only modifiable by administrators.",
+          "description": "Manages all navigation menu items and links across the website.",
           "params": [
             {
               "name": "linkId",
@@ -315,7 +362,7 @@
           "schema": {
             "$ref": "#/backend/entities/WebsiteContentBlock"
           },
-          "description": "A generic collection for storing various configurable text or HTML content blocks used throughout the website (e.g., headlines, descriptions). Documents are publicly readable but only modifiable by administrators.",
+          "description": "A generic collection for storing various configurable text or HTML content blocks.",
           "params": [
             {
               "name": "blockId",
@@ -324,7 +371,6 @@
           ]
         }
       }
-    ],
-    "reasoning": "The Firestore structure is designed to be highly secure, scalable, and debuggable, adhering strictly to the core design principles. The primary focus is on managing public-facing website content (Features, Pricing Plans, Testimonials, Navigation Links, and Website Content Blocks) and providing an administrative interface for modifying this content.\n\n**Authorization Independence:** This design explicitly avoids hierarchical authorization dependencies by ensuring that access to any document does not rely on fetching data from a parent document using `get()`. For instance, `NavigationLink` documents can reference a `parentId` for data structuring (e.g., creating sub-menus), but this `parentId` is a data relationship, not an authorization dependency. All documents in the primary content collections (`/features`, `/pricingPlans`, `/testimonials`, `/navigationLinks`, `/websiteContentBlocks`) are either publicly readable or their access is determined solely by the document's own fields (like `isApproved` for `Testimonial`) or the user's global administrative role.\n\n**QAPs (Rules are not Filters):**\n*   For collections like `/features`, `/pricingPlans`, `/navigationLinks`, and `/websiteContentBlocks`, all documents within these collections are intended for public display. Therefore, a `list` operation is inherently secure as all retrieved documents are meant to be public. Security rules will simply allow public read access.\n*   For `/testimonials`, the design includes an `isApproved` field. Security rules will enforce that only documents with `isApproved: true` are publicly readable. While clients will typically query `where('isApproved', '==', true)`, the security rule acts as a final gatekeeper, ensuring that any `list` operation (even a malformed one trying to read unapproved testimonials) will only return approved documents to non-admin users, thus upholding the QAP principle.\n\n**DBAC and Admin Access:** Administrative access for modifying any of these content collections will be managed via a dedicated `roles_admin` collection (`/roles_admin/{uid}`). The mere existence of a document in this collection with a user's `uid` as its ID grants them administrative privileges. This avoids custom claims and simplifies security rules, making admin checks a straightforward `exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid))` operation for write permissions across all content-management collections.\n\n**Structural Segregation:** Each collection (`/features`, `/pricingPlans`, `/testimonials`, `/navigationLinks`, `/websiteContentBlocks`) maintains a homogeneous security posture. For example, all `Feature` documents are public read, admin write. This simplifies rule writing significantly. The `NavigationLink` entity's `location` field allows for conceptual segregation (e.g., 'header_main', 'domain_submenu') without requiring separate physical collections, as the access patterns remain the same.\n\n**User Request Fulfillment:** The user's request to have dynamic, admin-manageable links for \"domain\" and \"hosting reseller\" options, including sub-titles and URLs, is directly addressed by the `NavigationLink` entity. The `title` and `url` fields are editable by administrators. The `parentId` field facilitates hierarchical menus (e.g., 'Domain' as a parent, with 'Domain Registration', 'Domain Pricing', 'Domain Transfer' as children). The `WebsiteContentBlock` provides generic, key-value storage for other dynamic text content like headlines or descriptions, also manageable by admins."
+    ]
   }
 }

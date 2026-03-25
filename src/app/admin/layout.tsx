@@ -1,7 +1,7 @@
 
 import { ReactNode } from "react";
 import Link from "next/link";
-import { LayoutDashboard, Link2, LogOut, Settings } from "lucide-react";
+import { LayoutDashboard, Link2, LogOut, Settings, Globe } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
@@ -26,10 +26,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </Link>
           <Link 
             href="/admin/navigation" 
-            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary transition-colors"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
           >
             <Link2 className="w-5 h-5" />
             <span className="font-medium">Navigation Links</span>
+          </Link>
+          <Link 
+            href="/admin/domains" 
+            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Globe className="w-5 h-5" />
+            <span className="font-medium">Domain Prices</span>
           </Link>
         </nav>
         <div className="p-4 border-t">
