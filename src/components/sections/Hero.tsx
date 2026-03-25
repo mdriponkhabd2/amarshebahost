@@ -2,16 +2,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Server, Shield, Zap } from "lucide-react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { collection, query } from "firebase/firestore";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
-/**
- * Hero Component
- * Displays the main value proposition, dynamic text, and CTA buttons.
- */
 export function Hero() {
   const db = useFirestore();
   const heroPlaceholder = PlaceHolderImages.find(img => img.id === "hero-server");
@@ -85,14 +80,10 @@ export function Hero() {
           <div className="absolute -inset-4 gradient-blue opacity-10 blur-2xl rounded-3xl" />
           <div className="relative glass-card rounded-3xl p-4 transform hover:scale-[1.02] transition-transform duration-500">
             {imageUrl ? (
-              <Image
+              <img
                 src={imageUrl}
                 alt="Hosting Servers"
-                width={600}
-                height={400}
-                className="rounded-2xl shadow-lg object-cover"
-                data-ai-hint="server datacenter"
-                priority
+                className="w-full h-auto rounded-2xl shadow-lg object-cover"
               />
             ) : (
               <div className="w-full h-[400px] bg-muted rounded-2xl flex items-center justify-center">

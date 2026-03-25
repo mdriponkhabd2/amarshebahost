@@ -3,7 +3,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { 
   Menu, 
@@ -99,7 +98,6 @@ export function Navbar() {
   };
 
   const NavDropdown = ({ label, items }: { label: string; items: any[] }) => {
-    // Prevent hydration mismatch by only rendering dropdown content on client
     if (!mounted) {
       return (
         <button className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary transition-colors outline-none">
@@ -150,15 +148,11 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
           {logoUrl ? (
-            <div className="relative h-10 w-48">
-              <Image 
-                src={logoUrl} 
-                alt="AmarShebaHost Logo" 
-                fill 
-                className="object-contain object-left"
-                priority
-              />
-            </div>
+            <img 
+              src={logoUrl} 
+              alt="AmarShebaHost Logo" 
+              className="h-10 w-auto object-contain object-left"
+            />
           ) : (
             <>
               <div className="w-10 h-10 gradient-blue rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">

@@ -1,7 +1,6 @@
 
 "use client";
 
-import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Headphones } from "lucide-react";
@@ -34,13 +33,10 @@ export function About() {
         <div className="relative">
           <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full" />
           {imageUrl ? (
-            <Image
+            <img
               src={imageUrl}
               alt="About Us"
-              width={600}
-              height={500}
-              className="relative rounded-[2rem] shadow-2xl object-cover"
-              data-ai-hint="customer support"
+              className="relative w-full h-auto rounded-[2rem] shadow-2xl object-cover"
             />
           ) : (
             <div className="relative w-full h-[500px] bg-muted rounded-[2rem] flex items-center justify-center">

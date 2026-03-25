@@ -2,7 +2,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Facebook, Twitter, Instagram, Linkedin, Globe, Mail, Phone, MapPin } from "lucide-react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { collection, query } from "firebase/firestore";
@@ -22,7 +21,7 @@ export function Footer() {
   const tw = getVal("social_twitter_url", "#");
   const ig = getVal("social_instagram_url", "#");
   const li = getVal("social_linkedin_url", "#");
-  const paymentImg = getVal("payment_methods_image_url", "https://images.unsplash.com/photo-1556742049-0ad745665771?q=80&w=1000&auto=format&fit=crop");
+  const paymentImg = getVal("payment_methods_image_url", "");
 
   return (
     <footer id="contact" className="bg-foreground text-white pt-20 pb-10">
@@ -99,12 +98,11 @@ export function Footer() {
         {paymentImg && (
           <div className="border-t border-white/10 pt-10 pb-6">
             <h5 className="text-xl font-bold mb-6 tracking-wide uppercase opacity-70">We Accepted</h5>
-            <div className="relative w-full max-w-4xl h-24 md:h-32">
-              <Image 
+            <div className="max-w-4xl">
+              <img 
                 src={paymentImg} 
                 alt="Accepted Payment Methods" 
-                fill 
-                className="object-contain object-left"
+                className="max-w-full h-auto max-h-32 object-contain"
               />
             </div>
           </div>
