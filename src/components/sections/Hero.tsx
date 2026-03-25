@@ -5,9 +5,27 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { ChevronRight, Server, Shield, Zap } from "lucide-react";
+import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { collection, query } from "firebase/firestore";
 
 export function Hero() {
-  const heroImage = PlaceHolderImages.find(img => img.id === "hero-server");
+  const db = useFirestore();
+  const heroPlaceholder = PlaceHolderImages.find(img => img.id === "hero-server");
+
+  const contentQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, "websiteContentBlocks"));
+  }, [db]);
+
+  const { data: blocks } = useCollection(contentQuery);
+
+  const getBlockValue = (key: string, defaultValue: string) => {
+    return blocks?.find(b => b.id === key)?.value || defaultValue;
+  };
+
+  const headline = getBlockValue("hero_headline", "Fast, Secure & Reliable Hosting");
+  const subheadline = getBlockValue("hero_subheadline", "Empower your online presence with ultra-fast servers, 99.9% uptime, and premium support. Start your journey with AmarShebaHost today.");
+  const imageUrl = getBlockValue("hero_image_url", heroPlaceholder?.imageUrl || "");
 
   return (
     <section id="home" className="relative pt-32 pb-20 overflow-hidden">
@@ -21,12 +39,11 @@ export function Hero() {
             <Zap className="w-3 h-3" />
             <span>Best Web Hosting in Bangladesh</span>
           </div>
-          <h1 className="text-5xl lg:text-7xl font-bold leading-[1.1] mb-6">
-            Fast, Secure & <br />
-            <span className="text-primary">Reliable Hosting</span>
+          <h1 className="text-5xl lg:text-7xl font-bold leading-[1.1] mb-6 whitespace-pre-line">
+            {headline}
           </h1>
           <p className="text-lg text-muted-foreground mb-10 max-w-lg">
-            Empower your online presence with ultra-fast servers, 99.9% uptime, and premium support. Start your journey with AmarShebaHost today.
+            {subheadline}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button size="lg" className="gradient-blue text-lg px-8 shadow-xl hover:scale-105 transition-transform">
@@ -46,10 +63,10 @@ export function Hero() {
         <div className="relative animate-fade-in delay-300">
           <div className="absolute -inset-4 gradient-blue opacity-10 blur-2xl rounded-3xl" />
           <div className="relative glass-card rounded-3xl p-4 transform hover:scale-[1.02] transition-transform duration-500">
-            {heroImage?.imageUrl ? (
+            {imageUrl ? (
               <Image
-                src={heroImage.imageUrl}
-                alt={heroImage.description || "Hosting Servers"}
+                src={imageUrl}
+                alt="Hosting Servers"
                 width={600}
                 height={400}
                 className="rounded-2xl shadow-lg object-cover"

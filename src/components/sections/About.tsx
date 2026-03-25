@@ -1,21 +1,42 @@
 
+"use client";
+
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Headphones } from "lucide-react";
+import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { collection, query } from "firebase/firestore";
 
 export function About() {
-  const aboutImage = PlaceHolderImages.find(img => img.id === "about-support");
+  const db = useFirestore();
+  const aboutPlaceholder = PlaceHolderImages.find(img => img.id === "about-support");
+
+  const contentQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, "websiteContentBlocks"));
+  }, [db]);
+
+  const { data: blocks } = useCollection(contentQuery);
+
+  const getBlockValue = (key: string, defaultValue: string) => {
+    return blocks?.find(b => b.id === key)?.value || defaultValue;
+  };
+
+  const headline = getBlockValue("about_headline", "Reliable Web Hosting Born in Bangladesh");
+  const desc1 = getBlockValue("about_desc_1", "AmarShebaHost was founded with a single mission: to provide high-quality, world-class hosting solutions at affordable prices for the Bangladeshi market. We understand the local ecosystem better than anyone else.");
+  const desc2 = getBlockValue("about_desc_2", "With our servers located in strategic global data centers and a local support team ready to assist you in Bengali and English, we ensure your online journey is smooth, secure, and successful.");
+  const imageUrl = getBlockValue("about_image_url", aboutPlaceholder?.imageUrl || "");
 
   return (
     <section id="about" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div className="relative">
           <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full" />
-          {aboutImage?.imageUrl ? (
+          {imageUrl ? (
             <Image
-              src={aboutImage.imageUrl}
-              alt={aboutImage.description || "About Us"}
+              src={imageUrl}
+              alt="About Us"
               width={600}
               height={500}
               className="relative rounded-[2rem] shadow-2xl object-cover"
@@ -30,14 +51,13 @@ export function About() {
         
         <div>
           <h2 className="text-4xl font-bold mb-8 leading-tight">
-            Reliable Web Hosting <br />
-            <span className="text-primary">Born in Bangladesh</span>
+            {headline}
           </h2>
           <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-            AmarShebaHost was founded with a single mission: to provide high-quality, world-class hosting solutions at affordable prices for the Bangladeshi market. We understand the local ecosystem better than anyone else.
+            {desc1}
           </p>
           <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
-            With our servers located in strategic global data centers and a local support team ready to assist you in Bengali and English, we ensure your online journey is smooth, secure, and successful.
+            {desc2}
           </p>
           
           <div className="grid grid-cols-2 gap-8 mb-10">

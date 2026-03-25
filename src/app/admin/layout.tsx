@@ -4,7 +4,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Link2, LogOut, Settings, Globe } from "lucide-react";
+import { LayoutDashboard, Link2, LogOut, Settings, Globe, FileText } from "lucide-react";
 
 /**
  * AdminLayout Component
@@ -81,6 +81,15 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           >
             <LayoutDashboard className="w-5 h-5" />
             <span>Dashboard</span>
+          </Link>
+          <Link 
+            href="/admin/content" 
+            className={`flex items-center gap-3 px-5 py-4 rounded-2xl transition-all ${
+              pathname === "/admin/content" ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:bg-accent hover:text-foreground"
+            }`}
+          >
+            <FileText className="w-5 h-5" />
+            <span>Website Content</span>
           </Link>
           <Link 
             href="/admin/navigation" 
