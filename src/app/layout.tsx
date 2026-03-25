@@ -2,6 +2,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from "@/firebase/client-provider";
+import { WhatsAppWidget } from "@/components/WhatsAppWidget";
 
 export const metadata: Metadata = {
   title: 'AmarShebaHost | Fast, Secure & Reliable Web Hosting in Bangladesh',
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className="font-body antialiased selection:bg-primary/20">
         <FirebaseClientProvider>
           {children}
+          <WhatsAppWidget />
         </FirebaseClientProvider>
       </body>
     </html>

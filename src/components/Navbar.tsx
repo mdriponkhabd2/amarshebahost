@@ -37,10 +37,6 @@ import {
 import { useCollection, useMemoFirebase, useFirestore } from "@/firebase";
 import { collection, query, orderBy } from "firebase/firestore";
 
-/**
- * Navbar Component
- * Features dynamic navigation links and a responsive mobile menu.
- */
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -72,6 +68,7 @@ export function Navbar() {
   };
 
   const signInUrl = getBlockValue("hero_signin_url", "#");
+  const signUpUrl = getBlockValue("hero_signup_url", "#");
 
   const filterLinks = (location: string) => {
     return navLinks?.filter(link => link.location === location) || [];
@@ -161,12 +158,21 @@ export function Navbar() {
           <Link href="#contact" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
             Support
           </Link>
-          <Button 
-            className="gradient-blue shadow-lg hover:opacity-90 transition-opacity ml-4 rounded-xl"
-            onClick={() => window.location.href = signInUrl}
-          >
-            Sign In
-          </Button>
+          <div className="flex items-center gap-3 ml-4">
+            <Button 
+              className="gradient-blue shadow-lg hover:opacity-90 transition-opacity rounded-xl px-6"
+              onClick={() => window.location.href = signInUrl}
+            >
+              Sign In
+            </Button>
+            <Button 
+              variant="outline"
+              className="rounded-xl px-6 border-2 hover:bg-accent/50"
+              onClick={() => window.location.href = signUpUrl}
+            >
+              Sign Up
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -215,15 +221,27 @@ export function Navbar() {
             <Link href="#contact" className="text-lg font-semibold py-2" onClick={() => setIsMobileMenuOpen(false)}>
               Support
             </Link>
-            <Button 
-              className="gradient-blue w-full mt-4 h-12 rounded-xl text-lg font-bold"
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                window.location.href = signInUrl;
-              }}
-            >
-              Sign In
-            </Button>
+            <div className="flex flex-col gap-3 mt-6">
+              <Button 
+                className="gradient-blue w-full h-12 rounded-xl text-lg font-bold"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  window.location.href = signInUrl;
+                }}
+              >
+                Sign In
+              </Button>
+              <Button 
+                variant="outline"
+                className="w-full h-12 rounded-xl text-lg font-bold border-2"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  window.location.href = signUpUrl;
+                }}
+              >
+                Sign Up
+              </Button>
+            </div>
           </div>
         </div>
       )}
