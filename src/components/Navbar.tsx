@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { 
   Menu, 
@@ -67,6 +68,7 @@ export function Navbar() {
     return blocks?.find(b => b.id === key)?.value || defaultValue;
   };
 
+  const logoUrl = getBlockValue("website_logo_url", "");
   const signInUrl = getBlockValue("hero_signin_url", "#");
   const signUpUrl = getBlockValue("hero_signup_url", "#");
 
@@ -134,12 +136,26 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 gradient-blue rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">
-            <Globe className="w-6 h-6" />
-          </div>
-          <span className="text-xl font-bold tracking-tighter text-foreground">
-            AmarSheba<span className="text-primary">Host</span>
-          </span>
+          {logoUrl ? (
+            <div className="relative h-10 w-48">
+              <Image 
+                src={logoUrl} 
+                alt="AmarShebaHost Logo" 
+                fill 
+                className="object-contain object-left"
+                priority
+              />
+            </div>
+          ) : (
+            <>
+              <div className="w-10 h-10 gradient-blue rounded-xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform">
+                <Globe className="w-6 h-6" />
+              </div>
+              <span className="text-xl font-bold tracking-tighter text-foreground">
+                AmarSheba<span className="text-primary">Host</span>
+              </span>
+            </>
+          )}
         </Link>
 
         {/* Desktop Links */}

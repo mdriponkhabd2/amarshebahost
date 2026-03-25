@@ -10,9 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Save, Image as ImageIcon, Type, FileText, Link2 } from "lucide-react";
+import { Save, Image as ImageIcon, Type, FileText, Link2, Palette } from "lucide-react";
 
 const DEFAULT_CONTENT: Record<string, string> = {
+  "website_logo_url": "",
+  "website_favicon_url": "",
   "hero_headline": "Fast, Secure &\nReliable Hosting",
   "hero_subheadline": "Empower your online presence with ultra-fast servers, 99.9% uptime, and premium support. Start your journey with AmarShebaHost today.",
   "hero_image_url": "https://picsum.photos/seed/hosting1/1200/800",
@@ -26,7 +28,7 @@ const DEFAULT_CONTENT: Record<string, string> = {
 
 /**
  * AdminContent Component
- * Manages the text and image URLs for Hero and About sections.
+ * Manages branding, Hero, and About sections.
  */
 export default function AdminContent() {
   const db = useFirestore();
@@ -39,7 +41,6 @@ export default function AdminContent() {
 
   const { data: blocks, isLoading } = useCollection(contentQuery);
 
-  // Sync Firestore data to local state, keeping defaults for missing keys
   useEffect(() => {
     if (blocks) {
       const data: Record<string, string> = { ...DEFAULT_CONTENT };
@@ -72,8 +73,65 @@ export default function AdminContent() {
     <div className="p-8 max-w-5xl mx-auto space-y-8">
       <div>
         <h1 className="text-3xl font-bold mb-2 text-gradient">Website Content Manager</h1>
-        <p className="text-muted-foreground">Edit the main text, images, and button links.</p>
+        <p className="text-muted-foreground">Manage your site branding, text, and images.</p>
       </div>
+
+      {/* Branding Section */}
+      <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center">
+              <Palette className="w-5 h-5" />
+            </div>
+            <div>
+              <CardTitle>Site Branding</CardTitle>
+              <CardDescription>Upload your logo and favicon URLs.</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label>Logo URL (Replaces Text Logo)</Label>
+              <div className="flex gap-2">
+                <Input 
+                  value={formData["website_logo_url"]} 
+                  onChange={(e) => handleUpdate("website_logo_url", e.target.value)}
+                  placeholder="https://.../logo.png"
+                  className="rounded-xl h-12"
+                />
+                {formData["website_logo_url"] && (
+                  <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <img src={formData["website_logo_url"]} alt="Logo Preview" className="max-w-full max-h-full object-contain" />
+                  </div>
+                )}
+              </div>
+              <Button onClick={() => saveBlock("website_logo_url", "Website Logo Image URL")} size="sm" className="gradient-blue gap-2 rounded-lg">
+                <Save className="w-4 h-4" /> Save Logo
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <Label>Favicon URL</Label>
+              <div className="flex gap-2">
+                <Input 
+                  value={formData["website_favicon_url"]} 
+                  onChange={(e) => handleUpdate("website_favicon_url", e.target.value)}
+                  placeholder="https://.../favicon.ico"
+                  className="rounded-xl h-12"
+                />
+                {formData["website_favicon_url"] && (
+                  <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <img src={formData["website_favicon_url"]} alt="Favicon Preview" className="w-6 h-6 object-contain" />
+                  </div>
+                )}
+              </div>
+              <Button onClick={() => saveBlock("website_favicon_url", "Website Favicon URL")} size="sm" className="gradient-blue gap-2 rounded-lg">
+                <Save className="w-4 h-4" /> Save Favicon
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Hero Section Management */}
       <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white">
@@ -127,7 +185,7 @@ export default function AdminContent() {
               <Input 
                 value={formData["hero_signin_url"]} 
                 onChange={(e) => handleUpdate("hero_signin_url", e.target.value)}
-                placeholder="https://host.amarshebahost.com/clientarea.php"
+                placeholder="https://..."
                 className="rounded-xl"
               />
               <Button onClick={() => saveBlock("hero_signin_url", "Hero Sign In Link")} size="sm" variant="outline" className="gap-2 rounded-lg">
@@ -139,7 +197,7 @@ export default function AdminContent() {
               <Input 
                 value={formData["hero_signup_url"]} 
                 onChange={(e) => handleUpdate("hero_signup_url", e.target.value)}
-                placeholder="https://host.amarshebahost.com/register.php"
+                placeholder="https://..."
                 className="rounded-xl"
               />
               <Button onClick={() => saveBlock("hero_signup_url", "Hero Sign Up Link")} size="sm" variant="outline" className="gap-2 rounded-lg">
