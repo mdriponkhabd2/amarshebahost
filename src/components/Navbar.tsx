@@ -16,10 +16,9 @@ import {
   Cpu,
   Layers,
   HardDrive,
-  Search,
+  ShieldCheck,
   DollarSign,
   ArrowRightLeft,
-  ShieldCheck,
   MousePointerClick
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -35,10 +34,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useCollection, useMemoFirebase } from "@/firebase";
+import { useCollection, useMemoFirebase, useFirestore } from "@/firebase";
 import { collection, query, orderBy } from "firebase/firestore";
-import { useFirestore } from "@/firebase";
 
+/**
+ * Navbar Component
+ * Features dynamic navigation links and a responsive mobile menu.
+ */
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -57,7 +59,19 @@ export function Navbar() {
     return query(collection(db, "navigationLinks"), orderBy("displayOrder", "asc"));
   }, [db]);
 
+  const contentQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, "websiteContentBlocks"));
+  }, [db]);
+
   const { data: navLinks } = useCollection(navLinksQuery);
+  const { data: blocks } = useCollection(contentQuery);
+
+  const getBlockValue = (key: string, defaultValue: string) => {
+    return blocks?.find(b => b.id === key)?.value || defaultValue;
+  };
+
+  const signInUrl = getBlockValue("hero_signin_url", "#");
 
   const filterLinks = (location: string) => {
     return navLinks?.filter(link => link.location === location) || [];
@@ -67,7 +81,6 @@ export function Navbar() {
   const resellerItems = filterLinks("reseller");
   const domainItems = filterLinks("domain");
 
-  // Default icons mapping
   const getIcon = (title: string) => {
     const t = title.toLowerCase();
     if (t.includes("bdix")) return Zap;
@@ -148,8 +161,11 @@ export function Navbar() {
           <Link href="#contact" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
             Support
           </Link>
-          <Button className="gradient-blue shadow-lg hover:opacity-90 transition-opacity ml-4">
-            Get Started
+          <Button 
+            className="gradient-blue shadow-lg hover:opacity-90 transition-opacity ml-4 rounded-xl"
+            onClick={() => window.location.href = signInUrl}
+          >
+            Sign In
           </Button>
         </div>
 
@@ -199,7 +215,15 @@ export function Navbar() {
             <Link href="#contact" className="text-lg font-semibold py-2" onClick={() => setIsMobileMenuOpen(false)}>
               Support
             </Link>
-            <Button className="gradient-blue w-full mt-4 h-12 rounded-xl text-lg font-bold">Get Started</Button>
+            <Button 
+              className="gradient-blue w-full mt-4 h-12 rounded-xl text-lg font-bold"
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                window.location.href = signInUrl;
+              }}
+            >
+              Sign In
+            </Button>
           </div>
         </div>
       )}

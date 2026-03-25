@@ -8,6 +8,10 @@ import { Server, Shield, Zap } from "lucide-react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { collection, query } from "firebase/firestore";
 
+/**
+ * Hero Component
+ * Displays the main value proposition, dynamic text, and CTA buttons.
+ */
 export function Hero() {
   const db = useFirestore();
   const heroPlaceholder = PlaceHolderImages.find(img => img.id === "hero-server");
