@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Save, Image as ImageIcon, Type, FileText, Link2, Palette, ShoppingCart, Share2, CreditCard, Globe, Zap, LogIn, Layout } from "lucide-react";
+import { Save, Image as ImageIcon, Type, FileText, Link2, Palette, ShoppingCart, Share2, CreditCard, Globe, Zap, LogIn, Layout, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 
 const DEFAULT_CONTENT: Record<string, string> = {
   "website_logo_url": "",
@@ -31,7 +31,11 @@ const DEFAULT_CONTENT: Record<string, string> = {
   "social_linkedin_url": "#",
   "payment_methods_image_url": "https://images.unsplash.com/photo-1556742049-0ad745665771?q=80&w=1000&auto=format&fit=crop",
   "privacy_policy_content": "Our privacy policy details...",
-  "refund_policy_content": "Our refund policy details..."
+  "refund_policy_content": "Our refund policy details...",
+  "whatsapp_number": "8801977679962",
+  "contact_phone": "+880 1977-679962",
+  "contact_email": "support@amarshebahost.com",
+  "contact_address": "92 Shahid Faruk Road, near Tony Power, South Jatrabari, Dhaka-1204, Bangladesh"
 };
 
 export default function AdminContent() {
@@ -77,8 +81,67 @@ export default function AdminContent() {
     <div className="p-8 max-w-5xl mx-auto space-y-8 pb-20">
       <div>
         <h1 className="text-3xl font-bold mb-2 text-gradient">Website Content Manager</h1>
-        <p className="text-muted-foreground">Manage branding, hero content, buttons, and service links in real-time.</p>
+        <p className="text-muted-foreground">Manage branding, hero content, contact info, and service links in real-time.</p>
       </div>
+
+      {/* Contact & Support Information */}
+      <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">
+        <CardHeader className="bg-muted/30 border-b">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+              <Phone className="w-5 h-5" />
+            </div>
+            <div>
+              <CardTitle>Contact & Support Info</CardTitle>
+              <CardDescription>Manage WhatsApp, Phone, Email and Office Address.</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-8 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-3">
+              <Label className="flex items-center gap-2"><MessageCircle className="w-4 h-4 text-green-500" /> WhatsApp Number (without +)</Label>
+              <Input 
+                value={formData["whatsapp_number"]} 
+                onChange={(e) => handleUpdate("whatsapp_number", e.target.value)} 
+                placeholder="8801700000000"
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("whatsapp_number", "WhatsApp support number")} size="sm" className="w-full rounded-xl gradient-blue">Save WhatsApp</Button>
+            </div>
+            <div className="space-y-3">
+              <Label className="flex items-center gap-2"><Phone className="w-4 h-4 text-blue-500" /> Public Phone Number</Label>
+              <Input 
+                value={formData["contact_phone"]} 
+                onChange={(e) => handleUpdate("contact_phone", e.target.value)} 
+                placeholder="+880 1234-567890"
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("contact_phone", "Public contact phone")} size="sm" className="w-full rounded-xl gradient-blue">Save Phone</Button>
+            </div>
+            <div className="space-y-3">
+              <Label className="flex items-center gap-2"><Mail className="w-4 h-4 text-red-500" /> Support Email Address</Label>
+              <Input 
+                value={formData["contact_email"]} 
+                onChange={(e) => handleUpdate("contact_email", e.target.value)} 
+                placeholder="support@amarshebahost.com"
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("contact_email", "Support email address")} size="sm" className="w-full rounded-xl gradient-blue">Save Email</Button>
+            </div>
+            <div className="space-y-3">
+              <Label className="flex items-center gap-2"><MapPin className="w-4 h-4 text-orange-500" /> Office Address</Label>
+              <Input 
+                value={formData["contact_address"]} 
+                onChange={(e) => handleUpdate("contact_address", e.target.value)} 
+                placeholder="Full address here..."
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("contact_address", "Office physical address")} size="sm" className="w-full rounded-xl gradient-blue">Save Address</Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Branding Section */}
       <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">

@@ -22,6 +22,10 @@ export function Footer() {
   const ig = getVal("social_instagram_url", "#");
   const li = getVal("social_linkedin_url", "#");
   const paymentImg = getVal("payment_methods_image_url", "");
+  
+  const contactPhone = getVal("contact_phone", "+880 1977-679962");
+  const contactEmail = getVal("contact_email", "support@amarshebahost.com");
+  const contactAddress = getVal("contact_address", "92 Shahid Faruk Road, near Tony Power, South Jatrabari, Dhaka-1204, Bangladesh");
 
   return (
     <footer id="contact" className="bg-foreground text-white pt-20 pb-10">
@@ -80,15 +84,15 @@ export function Footer() {
             <ul className="space-y-4 text-white/60">
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary" />
-                <span>support@amarshebahost.com</span>
+                <span>{contactEmail}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary" />
-                <span>+880 1977-679962</span>
+                <span>{contactPhone}</span>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary mt-1" />
-                <span>92 Shahid Faruk Road, near Tony Power, South Jatrabari, Dhaka-1204, Bangladesh</span>
+                <span>{contactAddress}</span>
               </li>
             </ul>
           </div>

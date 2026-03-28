@@ -2,13 +2,25 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { collection, query } from "firebase/firestore";
 
 /**
  * WhatsAppWidget Component
  * Provides a floating WhatsApp chat button for live support.
+ * Pulls the phone number dynamically from Firestore.
  */
 export function WhatsAppWidget() {
-  const phoneNumber = "8801977679962";
+  const db = useFirestore();
+
+  const contentQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, "websiteContentBlocks"));
+  }, [db]);
+
+  const { data: blocks } = useCollection(contentQuery);
+  const phoneNumber = blocks?.find(b => b.id === "whatsapp_number")?.value || "8801977679962";
+  
   const message = "Hello AmarShebaHost! I have a question about your services.";
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 

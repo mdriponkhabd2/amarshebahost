@@ -6,12 +6,29 @@ import { Footer } from "@/components/sections/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, MessageSquare, Phone, LifeBuoy, FileText, HelpCircle } from "lucide-react";
+import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
+import { collection, query } from "firebase/firestore";
 
 /**
  * SupportPage Component
  * Provides various support options for customers.
  */
 export default function SupportPage() {
+  const db = useFirestore();
+
+  const contentQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, "websiteContentBlocks"));
+  }, [db]);
+
+  const { data: blocks } = useCollection(contentQuery);
+
+  const getVal = (key: string, def: string) => blocks?.find(b => b.id === key)?.value || def;
+
+  const contactPhone = getVal("contact_phone", "+880 1977-679962");
+  const contactEmail = getVal("contact_email", "support@amarshebahost.com");
+  const whatsappNumber = getVal("whatsapp_number", "8801977679962");
+
   const supportOptions = [
     {
       title: "Submit a Ticket",
@@ -34,7 +51,7 @@ export default function SupportPage() {
       description: "Get instant help via WhatsApp from our local support agents.",
       icon: MessageSquare,
       action: "Chat Now",
-      url: "https://wa.me/8801977679962",
+      url: `https://wa.me/${whatsappNumber}`,
       color: "bg-green-100 text-green-600"
     }
   ];
@@ -90,7 +107,7 @@ export default function SupportPage() {
                   </div>
                   <div>
                     <div className="text-sm text-muted-foreground">Phone Support</div>
-                    <div className="font-bold">+880 1977-679962</div>
+                    <div className="font-bold">{contactPhone}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -99,7 +116,7 @@ export default function SupportPage() {
                   </div>
                   <div>
                     <div className="text-sm text-muted-foreground">Email Support</div>
-                    <div className="font-bold">support@amarshebahost.com</div>
+                    <div className="font-bold">{contactEmail}</div>
                   </div>
                 </div>
               </div>
