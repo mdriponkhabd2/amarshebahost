@@ -4,11 +4,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { collection, query, orderBy, doc, serverTimestamp, setDoc, addDoc } from "firebase/firestore";
-import { MessageSquare, X, Send, User, Mail, MessageCircle } from "lucide-react";
+import { MessageSquare, X, Send, User, Mail, MessageCircle, Phone, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export function LiveChatWidget() {
@@ -21,6 +21,18 @@ export function LiveChatWidget() {
   const [inputMessage, setInputMessage] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const db = useFirestore();
+
+  // Fetch contact info from Firestore
+  const contentQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, "websiteContentBlocks"));
+  }, [db]);
+
+  const { data: blocks } = useCollection(contentQuery);
+  const getVal = (key: string, def: string) => blocks?.find(b => b.id === key)?.value || def;
+
+  const phoneNumber = getVal("contact_phone", "+880 1977-679962");
+  const whatsappNum = getVal("whatsapp_number", "8801977679962");
 
   useEffect(() => {
     const savedId = localStorage.getItem("chat_session_id");
@@ -106,11 +118,11 @@ export function LiveChatWidget() {
         >
           <MessageCircle className="w-8 h-8 text-white" />
           <span className="absolute left-full ml-4 px-4 py-2 bg-white text-black text-sm font-bold rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border">
-            Live Chat Support
+            Live Support
           </span>
         </Button>
       ) : (
-        <Card className="w-[350px] sm:w-[400px] h-[500px] rounded-[2rem] shadow-2xl border-none flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
+        <Card className="w-[350px] sm:w-[400px] h-[580px] rounded-[2.5rem] shadow-2xl border-none flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
           <CardHeader className="gradient-blue text-white p-6 flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -128,27 +140,53 @@ export function LiveChatWidget() {
 
           <CardContent className="flex-1 overflow-hidden p-0 flex flex-col bg-[#F8FAFC]">
             {!isJoined ? (
-              <form onSubmit={handleJoin} className="p-8 space-y-4">
-                <p className="text-sm text-muted-foreground text-center mb-6">Fill out the form below to start a live chat with our team.</p>
-                <div className="space-y-2">
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-                    <Input placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} className="pl-10 rounded-xl" required />
+              <div className="flex flex-col h-full overflow-y-auto custom-scrollbar">
+                {/* Quick Contact Options */}
+                <div className="p-6 bg-white border-b space-y-3">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Direct Contact</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <a 
+                      href={`https://wa.me/${whatsappNum}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 p-3 bg-green-50 text-green-600 rounded-xl text-xs font-bold hover:bg-green-100 transition-colors border border-green-100"
+                    >
+                      <MessageCircle className="w-4 h-4" /> WhatsApp
+                    </a>
+                    <a 
+                      href={`tel:${phoneNumber}`} 
+                      className="flex items-center justify-center gap-2 p-3 bg-blue-50 text-blue-600 rounded-xl text-xs font-bold hover:bg-blue-100 transition-colors border border-blue-100"
+                    >
+                      <Phone className="w-4 h-4" /> Call Now
+                    </a>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-                    <Input type="email" placeholder="Email Address" value={email} onChange={e => setEmail(e.target.value)} className="pl-10 rounded-xl" required />
+
+                <form onSubmit={handleJoin} className="p-8 space-y-4">
+                  <div className="text-center mb-4">
+                    <p className="text-sm font-bold">Start a Live Chat</p>
+                    <p className="text-[11px] text-muted-foreground">Average response time: 2 mins</p>
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Textarea placeholder="How can we help you today?" value={message} onChange={e => setMessage(e.target.value)} className="rounded-xl min-h-[100px]" required />
-                </div>
-                <Button type="submit" className="w-full gradient-blue h-12 rounded-xl font-bold mt-4 shadow-lg shadow-primary/20">
-                  Start Chat
-                </Button>
-              </form>
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <User className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
+                      <Input placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} className="pl-10 rounded-xl" required />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
+                      <Input type="email" placeholder="Email Address" value={email} onChange={e => setEmail(e.target.value)} className="pl-10 rounded-xl" required />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Textarea placeholder="How can we help you?" value={message} onChange={e => setMessage(e.target.value)} className="rounded-xl min-h-[80px]" required />
+                  </div>
+                  <Button type="submit" className="w-full gradient-blue h-12 rounded-xl font-bold mt-2 shadow-lg shadow-primary/20">
+                    Start Chat
+                  </Button>
+                </form>
+              </div>
             ) : (
               <>
                 <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
