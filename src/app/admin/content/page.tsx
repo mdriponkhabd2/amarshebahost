@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -10,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Save, Image as ImageIcon, Type, FileText, Link2, Palette, ShoppingCart, Share2, CreditCard, Globe, Zap, LogIn, Layout, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Save, Image as ImageIcon, Type, FileText, Link2, Palette, ShoppingCart, Share2, CreditCard, Globe, Zap, LogIn, Layout, Phone, Mail, MapPin, MessageCircle, Info } from "lucide-react";
 
 const DEFAULT_CONTENT: Record<string, string> = {
   "website_logo_url": "",
@@ -35,7 +34,11 @@ const DEFAULT_CONTENT: Record<string, string> = {
   "whatsapp_number": "8801977679962",
   "contact_phone": "+880 1977-679962",
   "contact_email": "support@amarshebahost.com",
-  "contact_address": "92 Shahid Faruk Road, near Tony Power, South Jatrabari, Dhaka-1204, Bangladesh"
+  "contact_address": "92 Shahid Faruk Road, near Tony Power, South Jatrabari, Dhaka-1204, Bangladesh",
+  "about_headline": "Reliable Web Hosting\nBorn in Bangladesh",
+  "about_desc_1": "AmarShebaHost was founded with a single mission: to provide high-quality, world-class hosting solutions at affordable prices for the Bangladeshi market. We understand the local ecosystem better than anyone else.",
+  "about_desc_2": "With our servers located in strategic global data centers and a local support team ready to assist you in Bengali and English, we ensure your online journey is smooth, secure, and successful.",
+  "about_image_url": "https://picsum.photos/seed/hosting2/800/600"
 };
 
 export default function AdminContent() {
@@ -182,45 +185,6 @@ export default function AdminContent() {
         </CardContent>
       </Card>
 
-      {/* Auth Links (Sign In / Sign Up) */}
-      <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">
-        <CardHeader className="bg-muted/30 border-b">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center">
-              <LogIn className="w-5 h-5" />
-            </div>
-            <div>
-              <CardTitle>Authentication Links</CardTitle>
-              <CardDescription>Set the URLs for Sign In and Sign Up buttons (Navbar & Hero).</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="p-8 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3 p-4 border rounded-2xl bg-muted/10">
-              <Label className="font-bold">Sign In Button URL</Label>
-              <Input 
-                value={formData["hero_signin_url"]} 
-                onChange={(e) => handleUpdate("hero_signin_url", e.target.value)} 
-                placeholder="https://client.amarshebahost.com/login"
-                className="rounded-xl"
-              />
-              <Button onClick={() => saveBlock("hero_signin_url", "Sign In Link")} size="sm" className="w-full rounded-xl gradient-blue">Save Sign In Link</Button>
-            </div>
-            <div className="space-y-3 p-4 border rounded-2xl bg-muted/10">
-              <Label className="font-bold">Sign Up Button URL</Label>
-              <Input 
-                value={formData["hero_signup_url"]} 
-                onChange={(e) => handleUpdate("hero_signup_url", e.target.value)} 
-                placeholder="https://client.amarshebahost.com/register"
-                className="rounded-xl"
-              />
-              <Button onClick={() => saveBlock("hero_signup_url", "Sign Up Link")} size="sm" className="w-full rounded-xl gradient-blue">Save Sign Up Link</Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Hero Content Section */}
       <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">
         <CardHeader className="bg-muted/30 border-b">
@@ -259,6 +223,99 @@ export default function AdminContent() {
               className="rounded-xl"
             />
             <Button onClick={() => saveBlock("hero_image_url", "Hero Image")} size="sm" variant="outline" className="rounded-xl">Save Hero Image</Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* About Us Section */}
+      <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">
+        <CardHeader className="bg-muted/30 border-b">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+              <Info className="w-5 h-5" />
+            </div>
+            <div>
+              <CardTitle>About Us Section Content</CardTitle>
+              <CardDescription>Manage the textual content and image for the About Us section.</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-8 space-y-6">
+          <div className="space-y-3">
+            <Label className="font-bold">About Headline</Label>
+            <Input 
+              value={formData["about_headline"]} 
+              onChange={(e) => handleUpdate("about_headline", e.target.value)} 
+              className="rounded-xl font-bold" 
+            />
+            <Button onClick={() => saveBlock("about_headline", "About Headline")} size="sm" variant="outline" className="rounded-xl">Save Headline</Button>
+          </div>
+          <div className="space-y-3">
+            <Label className="font-bold">About Description 1</Label>
+            <Textarea 
+              value={formData["about_desc_1"]} 
+              onChange={(e) => handleUpdate("about_desc_1", e.target.value)} 
+              className="rounded-xl min-h-[100px]" 
+            />
+            <Button onClick={() => saveBlock("about_desc_1", "About Description 1")} size="sm" variant="outline" className="rounded-xl">Save Description 1</Button>
+          </div>
+          <div className="space-y-3">
+            <Label className="font-bold">About Description 2</Label>
+            <Textarea 
+              value={formData["about_desc_2"]} 
+              onChange={(e) => handleUpdate("about_desc_2", e.target.value)} 
+              className="rounded-xl min-h-[100px]" 
+            />
+            <Button onClick={() => saveBlock("about_desc_2", "About Description 2")} size="sm" variant="outline" className="rounded-xl">Save Description 2</Button>
+          </div>
+          <div className="space-y-3">
+            <Label className="font-bold">About Image URL</Label>
+            <Input 
+              value={formData["about_image_url"]} 
+              onChange={(e) => handleUpdate("about_image_url", e.target.value)} 
+              placeholder="https://..."
+              className="rounded-xl"
+            />
+            <Button onClick={() => saveBlock("about_image_url", "About Image")} size="sm" variant="outline" className="rounded-xl">Save About Image</Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Auth Links (Sign In / Sign Up) */}
+      <Card className="rounded-[2.5rem] shadow-sm border-border/50 bg-white overflow-hidden">
+        <CardHeader className="bg-muted/30 border-b">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center">
+              <LogIn className="w-5 h-5" />
+            </div>
+            <div>
+              <CardTitle>Authentication Links</CardTitle>
+              <CardDescription>Set the URLs for Sign In and Sign Up buttons (Navbar & Hero).</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-8 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-3 p-4 border rounded-2xl bg-muted/10">
+              <Label className="font-bold">Sign In Button URL</Label>
+              <Input 
+                value={formData["hero_signin_url"]} 
+                onChange={(e) => handleUpdate("hero_signin_url", e.target.value)} 
+                placeholder="https://client.amarshebahost.com/login"
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("hero_signin_url", "Sign In Link")} size="sm" className="w-full rounded-xl gradient-blue">Save Sign In Link</Button>
+            </div>
+            <div className="space-y-3 p-4 border rounded-2xl bg-muted/10">
+              <Label className="font-bold">Sign Up Button URL</Label>
+              <Input 
+                value={formData["hero_signup_url"]} 
+                onChange={(e) => handleUpdate("hero_signup_url", e.target.value)} 
+                placeholder="https://client.amarshebahost.com/register"
+                className="rounded-xl"
+              />
+              <Button onClick={() => saveBlock("hero_signup_url", "Sign Up Link")} size="sm" className="w-full rounded-xl gradient-blue">Save Sign Up Link</Button>
+            </div>
           </div>
         </CardContent>
       </Card>
