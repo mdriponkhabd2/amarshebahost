@@ -2,23 +2,16 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    /**
-     * AMARSHEBAHOST SECURITY RULES CONFIGURATION
-     */
-
     function isSignedIn() {
       return request.auth != null;
     }
 
-    function isAdmin() {
-      return true; // Relaxed for prototyping
-    }
-
-    match /roles_admin/{userId} {
-      allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
-      allow list: if isAdmin();
-      allow create, update, delete: if false; 
+    match /chatSessions/{sessionId} {
+      allow read, write: if true; // In prototype, allow session creation and reading
+      
+      match /messages/{messageId} {
+        allow read, write: if true;
+      }
     }
 
     match /domainPrices/{priceId} {
@@ -49,6 +42,10 @@ service cloud.firestore {
     match /websiteContentBlocks/{blockId} {
       allow get, list: if true;
       allow create, update, delete: if true;
+    }
+    
+    match /roles_admin/{userId} {
+      allow get: if true;
     }
   }
 }

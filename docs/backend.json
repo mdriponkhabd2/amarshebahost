@@ -1,256 +1,34 @@
 
 {
   "entities": {
-    "DomainPrice": {
+    "ChatSession": {
       "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "DomainPrice",
+      "title": "ChatSession",
       "type": "object",
-      "description": "Represents the pricing information for a specific domain extension (TLD).",
+      "description": "Represents a live chat session between a user and support.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the domain price record."
-        },
-        "tld": {
-          "type": "string",
-          "description": "The domain extension (e.g., '.com', '.net')."
-        },
-        "price": {
-          "type": "string",
-          "description": "The display price for the extension (e.g., '$9.99/yr')."
-        },
-        "displayOrder": {
-          "type": "number",
-          "description": "Order in which this extension appears in the search list."
-        }
+        "id": { "type": "string" },
+        "userName": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "lastMessage": { "type": "string" },
+        "lastTimestamp": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["open", "closed"] },
+        "unreadCount": { "type": "number" }
       },
-      "required": [
-        "id",
-        "tld",
-        "price",
-        "displayOrder"
-      ]
+      "required": ["id", "userName", "userEmail", "status"]
     },
-    "Feature": {
+    "ChatMessage": {
       "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Feature",
+      "title": "ChatMessage",
       "type": "object",
-      "description": "Represents a key feature of the web hosting service, displayed to users on the AmarShebaHost website.",
+      "description": "A single message within a chat session.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Feature entity."
-        },
-        "title": {
-          "type": "string",
-          "description": "The name of the feature (e.g., 'High Speed Servers', '99.9% Uptime Guarantee')."
-        },
-        "description": {
-          "type": "string",
-          "description": "A brief, explanatory description of the feature's benefit or functionality."
-        },
-        "iconIdentifier": {
-          "type": "string",
-          "description": "A string representing the icon to be displayed for the feature (e.g., an icon library class name or a URL to an SVG)."
-        },
-        "displayOrder": {
-          "type": "number",
-          "description": "The numerical order in which the feature should be displayed on the website."
-        }
+        "id": { "type": "string" },
+        "text": { "type": "string" },
+        "sender": { "type": "string", "enum": ["user", "admin"] },
+        "timestamp": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "title",
-        "description",
-        "iconIdentifier",
-        "displayOrder"
-      ]
-    },
-    "PricingPlan": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "PricingPlan",
-      "type": "object",
-      "description": "Defines a web hosting, VPS, or Reseller pricing plan offered by AmarShebaHost.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the PricingPlan entity."
-        },
-        "category": {
-          "type": "string",
-          "description": "The category of the plan (e.g., 'hosting', 'vps', 'reseller').",
-          "enum": ["hosting", "vps", "reseller"]
-        },
-        "name": {
-          "type": "string",
-          "description": "The marketing name of the pricing plan (e.g., 'Basic', 'Standard', 'Premium')."
-        },
-        "description": {
-          "type": "string",
-          "description": "A short description or tagline summarizing the plan's purpose or target audience."
-        },
-        "price": {
-          "type": "number",
-          "description": "The numerical price of the plan."
-        },
-        "currency": {
-          "type": "string",
-          "description": "The currency of the price (e.g., '৳')."
-        },
-        "features": {
-          "type": "array",
-          "description": "A list of key features or benefits included in this specific pricing plan.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "isPopular": {
-          "type": "boolean",
-          "description": "A flag indicating if this plan should be highlighted on the website as the 'most popular' option."
-        },
-        "callToActionUrl": {
-          "type": "string",
-          "description": "The URL for the 'Buy Now' button associated with this plan, directing users to purchase.",
-          "format": "uri"
-        },
-        "displayOrder": {
-          "type": "number",
-          "description": "The numerical order in which the pricing plan should be displayed on the website."
-        }
-      },
-      "required": [
-        "id",
-        "category",
-        "name",
-        "description",
-        "price",
-        "currency",
-        "features",
-        "isPopular",
-        "callToActionUrl",
-        "displayOrder"
-      ]
-    },
-    "Testimonial": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "Testimonial",
-      "type": "object",
-      "description": "Stores customer reviews and ratings to build trust and credibility for AmarShebaHost.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Testimonial entity."
-        },
-        "customerName": {
-          "type": "string",
-          "description": "The full name of the customer who provided the testimonial."
-        },
-        "customerTitle": {
-          "type": "string",
-          "description": "The customer's title or affiliation (e.g., 'CEO of ABC Corp', 'Small Business Owner')."
-        },
-        "reviewText": {
-          "type": "string",
-          "description": "The actual text content of the customer's review or feedback."
-        },
-        "rating": {
-          "type": "number",
-          "description": "The customer's rating, typically on a scale of 1 to 5 stars."
-        },
-        "datePosted": {
-          "type": "string",
-          "description": "The date and time when the testimonial was posted or recorded.",
-          "format": "date-time"
-        },
-        "isApproved": {
-          "type": "boolean",
-          "description": "A flag indicating whether the testimonial has been approved by an administrator for public display."
-        },
-        "displayOrder": {
-          "type": "number",
-          "description": "The numerical order in which the testimonial should appear on the website."
-        }
-      },
-      "required": [
-        "id",
-        "customerName",
-        "reviewText",
-        "rating",
-        "datePosted",
-        "isApproved",
-        "displayOrder"
-      ]
-    },
-    "NavigationLink": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "NavigationLink",
-      "type": "object",
-      "description": "Represents a menu item or link within the website's navigation.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the NavigationLink entity."
-        },
-        "title": {
-          "type": "string",
-          "description": "The display text for the navigation link."
-        },
-        "url": {
-          "type": "string",
-          "description": "The destination URL for the navigation link.",
-          "format": "uri"
-        },
-        "location": {
-          "type": "string",
-          "description": "Specifies where the link is displayed on the website (e.g., 'hosting', 'reseller', 'domain')."
-        },
-        "displayOrder": {
-          "type": "number",
-          "description": "The numerical order of the link."
-        }
-      },
-      "required": [
-        "id",
-        "title",
-        "url",
-        "location",
-        "displayOrder"
-      ]
-    },
-    "WebsiteContentBlock": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
-      "title": "WebsiteContentBlock",
-      "type": "object",
-      "description": "A generic entity for storing configurable text content or blocks used throughout the website.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the WebsiteContentBlock entity."
-        },
-        "key": {
-          "type": "string",
-          "description": "A unique programmatic key."
-        },
-        "value": {
-          "type": "string",
-          "description": "The actual content."
-        },
-        "contentType": {
-          "type": "string",
-          "description": "Specifies the type of content (e.g., 'plaintext', 'html', 'markdown')."
-        },
-        "description": {
-          "type": "string",
-          "description": "A descriptive explanation."
-        }
-      },
-      "required": [
-        "id",
-        "key",
-        "value",
-        "contentType",
-        "description"
-      ]
+      "required": ["id", "text", "sender", "timestamp"]
     }
   },
   "auth": {
@@ -262,73 +40,19 @@
   "firestore": {
     "structure": [
       {
-        "path": "/roles_admin/{userId}",
+        "path": "/chatSessions/{sessionId}",
         "definition": {
-          "entityName": "AdminRole",
-          "schema": {
-            "$ref": "#/backend/entities/User"
-          },
-          "description": "Collection to store administrative roles."
+          "entityName": "ChatSession",
+          "schema": { "$ref": "#/backend/entities/ChatSession" },
+          "description": "Stores active and historical chat sessions."
         }
       },
       {
-        "path": "/domainPrices/{priceId}",
+        "path": "/chatSessions/{sessionId}/messages/{messageId}",
         "definition": {
-          "entityName": "DomainPrice",
-          "schema": {
-            "$ref": "#/backend/entities/DomainPrice"
-          },
-          "description": "Stores pricing for various domain extensions."
-        }
-      },
-      {
-        "path": "/features/{featureId}",
-        "definition": {
-          "entityName": "Feature",
-          "schema": {
-            "$ref": "#/backend/entities/Feature"
-          },
-          "description": "Stores key features of the web hosting service."
-        }
-      },
-      {
-        "path": "/pricingPlans/{planId}",
-        "definition": {
-          "entityName": "PricingPlan",
-          "schema": {
-            "$ref": "#/backend/entities/PricingPlan"
-          },
-          "description": "Contains details for various hosting, VPS, and reseller plans."
-        }
-      },
-      {
-        "path": "/testimonials/{testimonialId}",
-        "definition": {
-          "entityName": "Testimonial",
-          "schema": {
-            "$ref": "#/backend/entities/Testimonial"
-          },
-          "description": "Stores customer testimonials."
-        }
-      },
-      {
-        "path": "/navigationLinks/{linkId}",
-        "definition": {
-          "entityName": "NavigationLink",
-          "schema": {
-            "$ref": "#/backend/entities/NavigationLink"
-          },
-          "description": "Manages all navigation menu items."
-        }
-      },
-      {
-        "path": "/websiteContentBlocks/{blockId}",
-        "definition": {
-          "entityName": "WebsiteContentBlock",
-          "schema": {
-            "$ref": "#/backend/entities/WebsiteContentBlock"
-          },
-          "description": "A generic collection for storing various configurable text blocks."
+          "entityName": "ChatMessage",
+          "schema": { "$ref": "#/backend/entities/ChatMessage" },
+          "description": "Sub-collection of messages for a specific chat session."
         }
       }
     ]
