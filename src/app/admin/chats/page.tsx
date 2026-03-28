@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Send, User, Clock, CheckCircle2, MoreVertical } from "lucide-react";
+import { MessageSquare, Send, User, Clock, CheckCircle2, MoreVertical, Phone, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function AdminChats() {
@@ -124,7 +124,14 @@ export default function AdminChats() {
                 </div>
                 <div>
                   <CardTitle>{selectedSession.userName}</CardTitle>
-                  <CardDescription>{selectedSession.userEmail}</CardDescription>
+                  <div className="flex flex-col gap-1 mt-1">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Mail className="w-3 h-3" /> {selectedSession.userEmail}
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-primary font-bold">
+                      <Phone className="w-3 h-3" /> WhatsApp: {selectedSession.userPhone}
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">

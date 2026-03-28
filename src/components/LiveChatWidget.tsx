@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { collection, query, orderBy, doc, serverTimestamp, setDoc, addDoc } from "firebase/firestore";
-import { MessageSquare, X, Send, User, Mail, MessageCircle, Phone, ExternalLink } from "lucide-react";
+import { MessageSquare, X, Send, User, Mail, MessageCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +16,7 @@ export function LiveChatWidget() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [isJoined, setIsJoined] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
@@ -31,7 +32,7 @@ export function LiveChatWidget() {
   const { data: blocks } = useCollection(contentQuery);
   const getVal = (key: string, def: string) => blocks?.find(b => b.id === key)?.value || def;
 
-  const phoneNumber = getVal("contact_phone", "+880 1977-679962");
+  const contactPhoneNumber = getVal("contact_phone", "+880 1977-679962");
   const whatsappNum = getVal("whatsapp_number", "8801977679962");
 
   useEffect(() => {
@@ -59,7 +60,7 @@ export function LiveChatWidget() {
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !message || !db) return;
+    if (!name || !email || !phone || !message || !db) return;
 
     const newSessionId = `session_${Date.now()}`;
     const sessionRef = doc(db, "chatSessions", newSessionId);
@@ -68,6 +69,7 @@ export function LiveChatWidget() {
       id: newSessionId,
       userName: name,
       userEmail: email,
+      userPhone: phone,
       status: "open",
       lastMessage: message,
       lastTimestamp: serverTimestamp(),
@@ -122,7 +124,7 @@ export function LiveChatWidget() {
           </span>
         </Button>
       ) : (
-        <Card className="w-[350px] sm:w-[400px] h-[580px] rounded-[2.5rem] shadow-2xl border-none flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
+        <Card className="w-[350px] sm:w-[400px] h-[620px] rounded-[2.5rem] shadow-2xl border-none flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
           <CardHeader className="gradient-blue text-white p-6 flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -154,7 +156,7 @@ export function LiveChatWidget() {
                       <MessageCircle className="w-4 h-4" /> WhatsApp
                     </a>
                     <a 
-                      href={`tel:${phoneNumber}`} 
+                      href={`tel:${contactPhoneNumber}`} 
                       className="flex items-center justify-center gap-2 p-3 bg-blue-50 text-blue-600 rounded-xl text-xs font-bold hover:bg-blue-100 transition-colors border border-blue-100"
                     >
                       <Phone className="w-4 h-4" /> Call Now
@@ -177,6 +179,12 @@ export function LiveChatWidget() {
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
                       <Input type="email" placeholder="Email Address" value={email} onChange={e => setEmail(e.target.value)} className="pl-10 rounded-xl" required />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
+                      <Input placeholder="WhatsApp Number" value={phone} onChange={e => setPhone(e.target.value)} className="pl-10 rounded-xl" required />
                     </div>
                   </div>
                   <div className="space-y-2">
