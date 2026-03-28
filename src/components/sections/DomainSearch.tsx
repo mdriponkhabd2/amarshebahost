@@ -33,51 +33,59 @@ export function DomainSearch() {
   };
 
   return (
-    <section className="py-12 relative">
-      <div className="max-w-4xl mx-auto px-6">
-        <div className="gradient-blue rounded-3xl p-8 lg:p-12 shadow-2xl text-white relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
-          
-          <div className="text-center mb-10 relative z-10">
-            <h2 className="text-3xl font-bold mb-4">Find Your Perfect Domain</h2>
-            <p className="text-white/80">Start with the right name. Search availability now.</p>
-          </div>
+    <section className="relative gradient-blue py-16 lg:py-20 text-white overflow-hidden">
+      {/* Decorative patterns */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/3" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/20 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/4" />
+      
+      <div className="max-w-5xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4">Find Your Perfect Domain</h2>
+          <p className="text-white/80 text-lg">Start with the right name. Search availability now.</p>
+        </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 relative z-10">
-            <div className="flex-1 relative">
-              <Input 
-                className="h-16 bg-white text-foreground pl-6 rounded-2xl border-none shadow-inner text-lg" 
-                placeholder="search-your-domain.com"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-            </div>
-            <Button 
-              size="lg" 
-              className="h-16 px-10 rounded-2xl bg-secondary hover:bg-secondary/90 text-white font-bold text-lg"
-              onClick={handleSearch}
-            >
-              <Search className="mr-2" /> Search
-            </Button>
+        <div className="flex flex-col sm:flex-row gap-4 max-w-4xl mx-auto">
+          <div className="flex-1 relative">
+            <Input 
+              className="h-16 bg-white text-foreground pl-6 rounded-2xl border-none shadow-xl text-lg w-full focus-visible:ring-offset-0 focus-visible:ring-2 focus-visible:ring-secondary/50" 
+              placeholder="search-your-domain.com"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
           </div>
+          <button 
+            className="h-16 px-10 rounded-2xl bg-secondary hover:bg-secondary/90 text-white font-bold text-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            onClick={handleSearch}
+          >
+            <Search className="w-5 h-5" /> Search Now
+          </button>
+        </div>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm font-medium text-white/70 relative z-10">
-            {prices && prices.length > 0 ? (
-              prices.map((item) => (
-                <span key={item.id} className="flex items-center gap-1">
-                  {item.tld} <span className="text-white">{item.price}</span>
-                </span>
-              ))
-            ) : (
-              <>
-                <span className="flex items-center gap-1">.com <span className="text-white">৳1200</span></span>
-                <span className="flex items-center gap-1">.top <span className="text-white">৳250</span></span>
-                <span className="flex items-center gap-1">.xyz <span className="text-white">৳350</span></span>
-                <span className="flex items-center gap-1">.bd <span className="text-white">৳1500</span></span>
-              </>
-            )}
-          </div>
+        <div className="mt-10 flex flex-wrap justify-center gap-8 text-sm font-semibold text-white/90">
+          {prices && prices.length > 0 ? (
+            prices.map((item) => (
+              <div key={item.id} className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+                <span className="opacity-70">{item.tld}</span> 
+                <span className="text-white font-bold">{item.price}</span>
+              </div>
+            ))
+          ) : (
+            <>
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+                <span className="opacity-70">.com</span> <span className="text-white font-bold">৳1200</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+                <span className="opacity-70">.top</span> <span className="text-white font-bold">৳250</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+                <span className="opacity-70">.xyz</span> <span className="text-white font-bold">৳350</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+                <span className="opacity-70">.bd</span> <span className="text-white font-bold">৳1500</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>
