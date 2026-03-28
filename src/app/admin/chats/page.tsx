@@ -9,13 +9,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Send, User, Clock, CheckCircle2, MoreVertical, Phone, Mail } from "lucide-react";
+import { MessageSquare, Send, User, Clock, CheckCircle2, MoreVertical, Phone, Mail, Image as ImageIcon, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function AdminChats() {
   const [selectedSession, setSelectedSession] = useState<any>(null);
   const [reply, setReply] = useState("");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const db = useFirestore();
 
   const sessionsQuery = useMemoFirebase(() => {
@@ -38,25 +40,38 @@ export default function AdminChats() {
     }
   }, [messages]);
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSendReply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!reply.trim() || !selectedSession || !db) return;
+    if ((!reply.trim() && !selectedImage) || !selectedSession || !db) return;
 
     const messagesRef = collection(db, "chatSessions", selectedSession.id, "messages");
     const sessionRef = doc(db, "chatSessions", selectedSession.id);
 
     await addDoc(messagesRef, {
       text: reply,
+      imageUrl: selectedImage,
       sender: "admin",
       timestamp: serverTimestamp()
     });
 
     await setDoc(sessionRef, {
-      lastMessage: reply,
+      lastMessage: selectedImage ? "Sent an image" : reply,
       lastTimestamp: serverTimestamp()
     }, { merge: true });
 
     setReply("");
+    setSelectedImage(null);
   };
 
   const markAsClosed = async (id: string) => {
@@ -150,7 +165,10 @@ export default function AdminChats() {
                   <div key={idx} className={cn("flex flex-col", msg.sender === "admin" ? "items-end" : "items-start")}>
                     <div className={cn("max-w-[70%] p-5 rounded-2xl text-sm shadow-sm leading-relaxed", 
                       msg.sender === "admin" ? "bg-primary text-white rounded-tr-none" : "bg-white text-foreground rounded-tl-none border")}>
-                      {msg.text}
+                      {msg.imageUrl && (
+                        <img src={msg.imageUrl} alt="Chat attachment" className="max-w-full rounded-lg mb-2 border shadow-sm" />
+                      )}
+                      {msg.text && <p>{msg.text}</p>}
                     </div>
                     <span className="text-[10px] text-muted-foreground mt-2 px-1">
                       {msg.sender === "admin" ? "You" : selectedSession.userName} • {msg.timestamp?.toDate() ? new Date(msg.timestamp.toDate()).toLocaleTimeString() : '...'}
@@ -159,8 +177,39 @@ export default function AdminChats() {
                 ))}
               </div>
               
+              {selectedImage && (
+                <div className="px-8 py-4 bg-muted/10 border-t flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <img src={selectedImage} alt="Pending" className="w-16 h-16 rounded-xl object-cover border-2 border-white shadow-md" />
+                    <div>
+                      <p className="text-sm font-bold">Image selected</p>
+                      <p className="text-xs text-muted-foreground">Click send to upload and notify user</p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={() => setSelectedImage(null)} className="h-10 w-10 rounded-full text-destructive">
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+              )}
+
               <div className="p-6 bg-white border-t">
                 <form onSubmit={handleSendReply} className="flex gap-4">
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    ref={fileInputRef} 
+                    onChange={handleImageSelect}
+                  />
+                  <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-14 w-14 rounded-2xl bg-muted/50 text-muted-foreground"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <ImageIcon className="w-6 h-6" />
+                  </Button>
                   <Input 
                     placeholder="Type your reply here..." 
                     value={reply} 

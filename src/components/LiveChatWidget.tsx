@@ -4,7 +4,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { collection, query, orderBy, doc, serverTimestamp, setDoc, addDoc } from "firebase/firestore";
-import { MessageSquare, X, Send, User, Mail, MessageCircle, Phone } from "lucide-react";
+import { MessageSquare, X, Send, User, Mail, MessageCircle, Phone, Image as ImageIcon, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,7 +20,9 @@ export function LiveChatWidget() {
   const [message, setMessage] = useState("");
   const [isJoined, setIsJoined] = useState(false);
   const [inputMessage, setInputMessage] = useState("");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const db = useFirestore();
 
   useEffect(() => {
@@ -46,9 +48,20 @@ export function LiveChatWidget() {
     }
   }, [messages]);
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !phone || !message || !db) return;
+    if (!name || !email || !phone || (!message && !selectedImage) || !db) return;
 
     const newSessionId = `session_${Date.now()}`;
     const sessionRef = doc(db, "chatSessions", newSessionId);
@@ -59,7 +72,7 @@ export function LiveChatWidget() {
       userEmail: email,
       userPhone: phone,
       status: "open",
-      lastMessage: message,
+      lastMessage: selectedImage ? "Sent an image" : message,
       lastTimestamp: serverTimestamp(),
       unreadCount: 0
     });
@@ -67,6 +80,7 @@ export function LiveChatWidget() {
     const messagesRef = collection(db, "chatSessions", newSessionId, "messages");
     await addDoc(messagesRef, {
       text: message,
+      imageUrl: selectedImage,
       sender: "user",
       timestamp: serverTimestamp()
     });
@@ -76,27 +90,32 @@ export function LiveChatWidget() {
     localStorage.setItem("chat_session_id", newSessionId);
     localStorage.setItem("chat_user_name", name);
     setMessage("");
+    setSelectedImage(null);
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputMessage.trim() || !sessionId || !db) return;
+    if ((!inputMessage.trim() && !selectedImage) || !sessionId || !db) return;
 
     const messagesRef = collection(db, "chatSessions", sessionId, "messages");
     const sessionRef = doc(db, "chatSessions", sessionId);
 
-    await addDoc(messagesRef, {
+    const messageData = {
       text: inputMessage,
+      imageUrl: selectedImage,
       sender: "user",
       timestamp: serverTimestamp()
-    });
+    };
+
+    await addDoc(messagesRef, messageData);
 
     await setDoc(sessionRef, {
-      lastMessage: inputMessage,
+      lastMessage: selectedImage ? "Sent an image" : inputMessage,
       lastTimestamp: serverTimestamp()
     }, { merge: true });
 
     setInputMessage("");
+    setSelectedImage(null);
   };
 
   return (
@@ -150,7 +169,37 @@ export function LiveChatWidget() {
                       <Input placeholder="WhatsApp Number" value={phone} onChange={e => setPhone(e.target.value)} className="pl-10 h-12 rounded-xl" required />
                     </div>
                     <div className="space-y-2">
-                      <Textarea placeholder="How can we help you?" value={message} onChange={e => setMessage(e.target.value)} className="rounded-xl min-h-[100px] p-4" required />
+                      <Textarea placeholder="How can we help you?" value={message} onChange={e => setMessage(e.target.value)} className="rounded-xl min-h-[100px] p-4" />
+                    </div>
+                    {/* Initial Image Option */}
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        ref={fileInputRef} 
+                        onChange={handleImageSelect}
+                      />
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        className="rounded-xl flex-1 h-12 gap-2 border-dashed"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <ImageIcon className="w-4 h-4" /> 
+                        {selectedImage ? "Image Selected" : "Attach Image"}
+                      </Button>
+                      {selectedImage && (
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-12 w-12 rounded-xl text-destructive"
+                          onClick={() => setSelectedImage(null)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
                     </div>
                   </div>
                   <Button type="submit" className="w-full gradient-blue h-14 rounded-xl font-bold mt-4 shadow-lg shadow-primary/20 text-lg">
@@ -165,7 +214,10 @@ export function LiveChatWidget() {
                     <div key={idx} className={cn("flex flex-col", msg.sender === "user" ? "items-end" : "items-start")}>
                       <div className={cn("max-w-[80%] p-4 rounded-2xl text-sm shadow-sm", 
                         msg.sender === "user" ? "bg-primary text-white rounded-tr-none" : "bg-white text-foreground rounded-tl-none border")}>
-                        {msg.text}
+                        {msg.imageUrl && (
+                          <img src={msg.imageUrl} alt="Chat content" className="max-w-full rounded-lg mb-2 shadow-sm" />
+                        )}
+                        {msg.text && <p>{msg.text}</p>}
                       </div>
                       <span className="text-[10px] text-muted-foreground mt-1 px-1">
                         {msg.timestamp?.toDate() ? new Date(msg.timestamp.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Sending...'}
@@ -178,8 +230,38 @@ export function LiveChatWidget() {
                     </div>
                   )}
                 </div>
+
+                {/* Image Preview before sending */}
+                {selectedImage && (
+                  <div className="px-4 py-2 bg-muted/20 border-t flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <img src={selectedImage} alt="Preview" className="w-12 h-12 rounded-lg object-cover border" />
+                      <span className="text-xs text-muted-foreground">Ready to send</span>
+                    </div>
+                    <Button variant="ghost" size="icon" onClick={() => setSelectedImage(null)} className="h-8 w-8 rounded-full text-destructive">
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+
                 <div className="p-4 bg-white border-t">
                   <form onSubmit={handleSendMessage} className="flex gap-2">
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      ref={fileInputRef} 
+                      onChange={handleImageSelect}
+                    />
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-12 w-12 rounded-xl bg-muted/50 text-muted-foreground"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <ImageIcon className="w-5 h-5" />
+                    </Button>
                     <Input 
                       placeholder="Type a message..." 
                       value={inputMessage} 

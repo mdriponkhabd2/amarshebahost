@@ -26,10 +26,11 @@
       "properties": {
         "id": { "type": "string" },
         "text": { "type": "string" },
+        "imageUrl": { "type": "string", "description": "Optional URL or Base64 data of an image sent in chat." },
         "sender": { "type": "string", "enum": ["user", "admin"] },
         "timestamp": { "type": "string", "format": "date-time" }
       },
-      "required": ["id", "text", "sender", "timestamp"]
+      "required": ["id", "sender", "timestamp"]
     }
   },
   "auth": {
