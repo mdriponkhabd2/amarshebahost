@@ -21,8 +21,8 @@ export function DomainSearch() {
 
   const handleSearch = () => {
     if (!searchTerm.trim()) return;
-    // Redirect to billing site with query
-    const billingUrl = `https://host.amarshebahost.top/cart.php?a=add&domain=register&query=${encodeURIComponent(searchTerm)}`;
+    // Redirect to the new registration URL provided by the user
+    const billingUrl = `https://host.amarshebahost.com/cart.php?a=add&domain=register&query=${encodeURIComponent(searchTerm)}`;
     window.location.href = billingUrl;
   };
 
@@ -71,10 +71,10 @@ export function DomainSearch() {
               ))
             ) : (
               <>
-                <span className="flex items-center gap-1">.com <span className="text-white">$9.99/yr</span></span>
-                <span className="flex items-center gap-1">.net <span className="text-white">$12.50/yr</span></span>
-                <span className="flex items-center gap-1">.org <span className="text-white">$10.99/yr</span></span>
-                <span className="flex items-center gap-1">.bd <span className="text-white">$15.00/yr</span></span>
+                <span className="flex items-center gap-1">.com <span className="text-white">৳1200</span></span>
+                <span className="flex items-center gap-1">.top <span className="text-white">৳250</span></span>
+                <span className="flex items-center gap-1">.xyz <span className="text-white">৳350</span></span>
+                <span className="flex items-center gap-1">.bd <span className="text-white">৳1500</span></span>
               </>
             )}
           </div>
